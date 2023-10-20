@@ -1,19 +1,7 @@
 runtime: nodejs16
 service: frontend
 handlers:
-# - url: /index.js
-#   static_files: src/index.js
-#   upload: src/index.js
-
-# - url: /(.+\.\w+)$
-#   static_files: build/\1
-#   upload: build/(.+\.\w+)
-
-# - url: /(.*)$
-#   static_files: build/\1
-#   upload: build/(.*)
-
- - url: /(. *.. +)$
+- url: /(. *.. +)$
   static_files: build/\1
   upload: build/(. *.. +)$
 
@@ -22,5 +10,5 @@ handlers:
   upload: build/index.html
 
 - url: /(.*)
-  static_files: build/\1
-  upload: build/\1
+  static_files: build/\\1
+  upload: build/(.*)
