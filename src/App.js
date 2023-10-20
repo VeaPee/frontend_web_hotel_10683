@@ -7,6 +7,8 @@ import Logout from './scenes/logout';
 
 import Kamar from "./scenes/kamar";
 import Season from "./scenes/season";
+import Tarif from "./scenes/tarif";
+import Fasilitas from "./scenes/fasilitas";
 
 import { useState } from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -14,7 +16,6 @@ import { ColorModeContext, useMode } from "./theme";
 import { Routes, Route } from "react-router-dom";
 import Topbar from "./scenes/global/Topbar";
 import Dashboard from "./scenes/dashboard";
-import Contacts from "./scenes/contacts";
 import Sidebar from "./scenes/global/Sidebar";
 import Invoices from "./scenes/invoices";
 import Form from "./scenes/form";
@@ -41,7 +42,8 @@ function App() {
                 <Route path="/logout" element={<Logout />}/>
                 <Route path="/kamar" element={<Kamar />} />
                 <Route path="/season" element={<Season />} />
-                <Route path="/contacts" element={<Contacts />} />
+                <Route path="/tarif" element={<Tarif />} />
+                <Route path="/fasilitas" element={<Fasilitas />} />
                 <Route path="/invoices" element={<Invoices />} />
                 <Route path="/form" element={<Form />} />
               </Routes>

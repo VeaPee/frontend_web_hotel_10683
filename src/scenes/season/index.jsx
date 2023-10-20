@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { Box, IconButton, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import axios from 'axios';
+import axios from "axios";
 
 const Season = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  
+
   const columns = [
     {
       field: "jenis_season",
@@ -40,7 +40,11 @@ const Season = () => {
         <IconButton
           variant="contained"
           color="primary"
-          sx={{ backgroundColor: colors.greenAccent[500], color: "white", borderRadius: 0 }}
+          sx={{
+            backgroundColor: colors.greenAccent[500],
+            color: "white",
+            borderRadius: 0,
+          }}
           onClick={() => handleUpdate(params.row.id)}
         >
           Update
@@ -55,7 +59,11 @@ const Season = () => {
         <IconButton
           variant="contained"
           color="secondary"
-          sx={{ backgroundColor: colors.redAccent[500], color: "white", borderRadius: 0 }}
+          sx={{
+            backgroundColor: colors.redAccent[500],
+            color: "white",
+            borderRadius: 0,
+          }}
           onClick={() => handleDelete(params.row.id)}
         >
           Delete
@@ -65,14 +73,20 @@ const Season = () => {
   ];
 
   const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const [token, setToken] = useState("");
+  
+  const fetchData = async (currentUserToken) => {
     try {
-      const response = await axios.get("http://localhost:6000/api/v1/season/getAllSeason");
+      const config = {
+        headers: {
+          Authorization: `${currentUserToken}`,
+        },
+      };
+  
+      const response = await axios.get(
+        "https://p3l-10683.et.r.appspot.com/api/v1/season/getAllSeason",
+        config
+      );
       console.log(response); // Check the response object and its structure
       const transformedData = response.data.data.map((item) => ({
         id: item.id,
@@ -87,6 +101,25 @@ const Season = () => {
       console.error(error);
     }
   };
+  
+  const getCurrentUserToken = () => {
+    // Implement the function to retrieve the token for the current user
+    // Return the token here
+    return localStorage.getItem("token");
+  };
+  
+  useEffect(() => {
+    // Get the token for the current user from your authentication system
+    const currentUserToken = getCurrentUserToken();
+    // console.log(currentUserToken)
+    setToken(currentUserToken);
+  }, []);
+  
+  useEffect(() => {
+    if (token) {
+      fetchData(token);
+    }
+  }, [token]);
 
   return (
     <Box m="20px">

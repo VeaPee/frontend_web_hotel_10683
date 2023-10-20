@@ -14,7 +14,7 @@ const Login = () => {
   const handleFormSubmit = (values) => {
 
     axios
-      .post("http://localhost:6000/api/v1/auth/login", { username: values.username, password: values.password })
+      .post("https://p3l-10683.et.r.appspot.com/api/v1/auth/login", { username: values.username, password: values.password })
       .then((result) => {
         console.log(result);
         if (result.data.message === "success") {

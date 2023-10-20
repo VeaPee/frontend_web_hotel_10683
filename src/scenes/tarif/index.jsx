@@ -5,39 +5,25 @@ import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import axios from "axios";
 
-const Kamar = () => {
+const Tarif = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const columns = [
     {
-      field: "jenisKamar",
-      headerName: "Jenis Kamar",
+      field: "jenis_season",
+      headerName: "Jenis Season",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "jenisBed",
-      headerName: "Jenis Bed",
+      field: "jenis_kamar",
+      headerName: "Jenis Kamar",
+      flex: 1,
     },
     {
-      field: "jumlah_bed",
-      headerName: "Jumlah Bed",
-      type: "number",
-    },
-    {
-      field: "kapasitas",
-      headerName: "Kapasitas",
-      type: "number",
-    },
-    {
-      field: "luas",
-      headerName: "Luas",
-      type: "number",
-    },
-    {
-      field: "fasilitas",
-      headerName: "Fasilitas",
+      field: "harga",
+      headerName: "Harga",
       flex: 1,
     },
     {
@@ -92,20 +78,44 @@ const Kamar = () => {
       };
 
       const response = await axios.get(
+        "https://p3l-10683.et.r.appspot.com/api/v1/tarif/getAllTarif",
+        config
+      );
+      console.log(response); // Check the response object and its structure
+
+
+      // Fetch Data from Kamar
+      const kamarResponse = await axios.get(
         "https://p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar",
         config
       );
+      console.log(kamarResponse); // Check the kamar response object and its structure
+  
+      const kamarData = kamarResponse.data.data.reduce((acc, item) => {
+        acc[item.id] = item;
+        return acc;
+      }, {});
 
-      console.log(response); // Check the response object and its structure
-      const transformedData = response.data.data.map((item) => ({
-        id: item.id,
-        jenisKamar: item.jenisKamar,
-        jenisBed: item.jenisBed,
-        jumlah_bed: item.jumlah_bed,
-        kapasitas: item.kapasitas,
-        luas: item.luas,
-        fasilitas: item.fasilitas,
-      }));
+      // Fetch Data from Season
+      const seasonResponse = await axios.get(
+        "https://p3l-10683.et.r.appspot.com/api/v1/season/getAllSeason",
+        config
+      );
+      console.log(seasonResponse); // Check the season response object and its structure
+  
+      const seasonData = seasonResponse.data.data.reduce((acc, item) => {
+        acc[item.id] = item;
+        return acc;
+      }, {});
+
+      const transformedData = response.data.data.map((item) => {
+        return {
+          id: item.id,
+          jenis_season: seasonData[item.seasonId].jenis_season,
+          jenis_kamar: kamarData[item.kamarId].jenisKamar,
+          harga: item.harga,
+        };
+      });
       console.log(transformedData); // Check the transformed data
       setData(transformedData);
     } catch (error) {
@@ -122,7 +132,7 @@ const Kamar = () => {
   useEffect(() => {
     // Get the token for the current user from your authentication system
     const currentUserToken = getCurrentUserToken();
-    console.log(currentUserToken);
+    // console.log(currentUserToken);
     setToken(currentUserToken);
   }, []);
 
@@ -134,7 +144,7 @@ const Kamar = () => {
 
   return (
     <Box m="20px">
-      <Header title="Kamar" subtitle="Managing Kamar" />
+      <Header title="Tarif" subtitle="Managing Tarif" />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -170,4 +180,4 @@ const Kamar = () => {
   );
 };
 
-export default Kamar;
+export default Tarif;

@@ -5,39 +5,25 @@ import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import axios from "axios";
 
-const Kamar = () => {
+const Fasilitas = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const columns = [
     {
-      field: "jenisKamar",
-      headerName: "Jenis Kamar",
+      field: "nama_fasilitas",
+      headerName: "Nama Fasilitas",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "jenisBed",
-      headerName: "Jenis Bed",
+      field: "satuan",
+      headerName: "Satuan",
+      flex: 1,
     },
     {
-      field: "jumlah_bed",
-      headerName: "Jumlah Bed",
-      type: "number",
-    },
-    {
-      field: "kapasitas",
-      headerName: "Kapasitas",
-      type: "number",
-    },
-    {
-      field: "luas",
-      headerName: "Luas",
-      type: "number",
-    },
-    {
-      field: "fasilitas",
-      headerName: "Fasilitas",
+      field: "harga",
+      headerName: "Harga",
       flex: 1,
     },
     {
@@ -92,20 +78,19 @@ const Kamar = () => {
       };
 
       const response = await axios.get(
-        "https://p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar",
+        "https://p3l-10683.et.r.appspot.com/api/v1/fasilitas/getAllFasilitas",
         config
       );
-
       console.log(response); // Check the response object and its structure
-      const transformedData = response.data.data.map((item) => ({
-        id: item.id,
-        jenisKamar: item.jenisKamar,
-        jenisBed: item.jenisBed,
-        jumlah_bed: item.jumlah_bed,
-        kapasitas: item.kapasitas,
-        luas: item.luas,
-        fasilitas: item.fasilitas,
-      }));
+  
+      const transformedData = response.data.data.map((item) => {
+        return {
+          id: item.id,
+          nama_fasilitas: item.nama_fasilitas,
+          satuan: item.satuan,
+          harga: item.harga,
+        };
+      });
       console.log(transformedData); // Check the transformed data
       setData(transformedData);
     } catch (error) {
@@ -122,7 +107,7 @@ const Kamar = () => {
   useEffect(() => {
     // Get the token for the current user from your authentication system
     const currentUserToken = getCurrentUserToken();
-    console.log(currentUserToken);
+    // console.log(currentUserToken);
     setToken(currentUserToken);
   }, []);
 
@@ -134,7 +119,7 @@ const Kamar = () => {
 
   return (
     <Box m="20px">
-      <Header title="Kamar" subtitle="Managing Kamar" />
+      <Header title="Fasilitas" subtitle="Managing Fasilitas" />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -170,4 +155,4 @@ const Kamar = () => {
   );
 };
 
-export default Kamar;
+export default Fasilitas;

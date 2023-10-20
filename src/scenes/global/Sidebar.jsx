@@ -174,14 +174,14 @@ const Sidebar = () => {
                 />
                 <Item
                   title="Tarif"
-                  to="/invoices"
+                  to="/tarif"
                   icon={<ReceiptOutlinedIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />
                 <Item
                   title="Fasilitas Tambahan"
-                  to="/invoices"
+                  to="/fasilitas"
                   icon={<SpaOutlinedIcon />}
                   selected={selected}
                   setSelected={setSelected}
