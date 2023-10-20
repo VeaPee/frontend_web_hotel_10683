@@ -10,5 +10,5 @@ handlers:
   upload: build/index.html
 
 - url: /(.*)
-  static_files: build/\1
-  upload: build/\1
+  static_files: build/\\1
+  upload: build/(.*)
