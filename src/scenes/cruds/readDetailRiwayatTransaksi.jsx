@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const Profile = () => {
+const DetailRiwayatTransaksi = () => {
   const [transformedData, setTransformedData] = useState([]);
 
   const [token, setToken] = useState("");
@@ -641,4 +641,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default DetailRiwayatTransaksi;
