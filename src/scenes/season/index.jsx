@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Box, IconButton, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  useTheme,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 const Season = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const navigate = useNavigate();
 
   const columns = [
     {
@@ -74,7 +86,13 @@ const Season = () => {
 
   const [data, setData] = useState([]);
   const [token, setToken] = useState("");
-  
+
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedRowId, setSelectedRowId] = useState(null);
+
   const fetchData = async (currentUserToken) => {
     try {
       const config = {
@@ -82,7 +100,7 @@ const Season = () => {
           Authorization: `${currentUserToken}`,
         },
       };
-  
+
       const response = await axios.get(
         "https://p3l-10683.et.r.appspot.com/api/v1/season/getAllSeason",
         config
@@ -97,24 +115,67 @@ const Season = () => {
       }));
       console.log(transformedData); // Check the transformed data
       setData(transformedData);
+      setFilteredData(transformedData); // Initialize filteredData with all data
     } catch (error) {
       console.error(error);
     }
   };
-  
+
+  const handleUpdate = (id) => {
+    navigate(`/seasonupdate/${id}`);
+  };
+
+  const handleDelete = (id) => {
+    setSelectedRowId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async (id) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: token,
+        },
+      };
+
+      await axios.delete(
+        `https://p3l-10683.et.r.appspot.com/api/v1/season/deleteSeason/${id}`,
+        config
+      );
+
+      // Refresh the page after successful deletion
+      fetchData(token);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    const filtered = data.filter((item) => {
+      const lowerCaseQuery = query.toLowerCase();
+      const lowerCaseName = item.jenis_season.toLowerCase();
+      return lowerCaseName.includes(lowerCaseQuery);
+    });
+
+    setFilteredData(filtered);
+  };
+
   const getCurrentUserToken = () => {
     // Implement the function to retrieve the token for the current user
     // Return the token here
     return localStorage.getItem("token");
   };
-  
+
   useEffect(() => {
     // Get the token for the current user from your authentication system
     const currentUserToken = getCurrentUserToken();
     // console.log(currentUserToken)
     setToken(currentUserToken);
   }, []);
-  
+
   useEffect(() => {
     if (token) {
       fetchData(token);
@@ -124,6 +185,37 @@ const Season = () => {
   return (
     <Box m="20px">
       <Header title="Season" subtitle="Managing Season" />
+      <Box display="flex" justifyContent="first" mt="20px">
+        <IconButton
+          variant="contained"
+          color="secondary"
+          sx={{
+            backgroundColor: colors.blueAccent[500],
+            color: "white",
+            borderRadius: 0,
+          }}
+          onClick={() => navigate("/seasoncreate")}
+        >
+          Create
+        </IconButton>
+      </Box>
+
+      <Box
+        sx={{
+          marginTop: "20px",
+          display: "flex",
+          justifyContent: "flex-end",
+          paddingRight: "20px",
+        }}
+      >
+        <TextField
+          label="Search"
+          variant="outlined"
+          value={searchQuery}
+          onChange={handleSearch}
+        />
+      </Box>
+
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -153,8 +245,35 @@ const Season = () => {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={data} columns={columns} />
+        <DataGrid
+          rows={filteredData}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+          disableSelectionOnClick
+        />
       </Box>
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Delete Confirmation</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this item?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button
+            onClick={() => {
+              setDeleteDialogOpen(false);
+              handleConfirmDelete(selectedRowId);
+            }}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

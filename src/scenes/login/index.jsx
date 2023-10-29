@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -12,15 +12,17 @@ const Login = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = (values) => {
-
     axios
-      .post("https://p3l-10683.et.r.appspot.com/api/v1/auth/login", { username: values.username, password: values.password })
+      .post("https://p3l-10683.et.r.appspot.com/api/v1/auth/login", {
+        username: values.username,
+        password: values.password,
+      })
       .then((result) => {
         console.log(result);
         if (result.data.message === "success") {
           console.log("Login Success");
           alert("Login successful!");
-          localStorage.setItem('token', result.data.data.token);
+          localStorage.setItem("token", result.data.data.token);
           navigate("/");
           window.location.reload();
         } else {
@@ -83,8 +85,27 @@ const Login = () => {
               />
             </Box>
             <Box display="flex" justifyContent="first" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
+              <Button
+                type="submit"
+                color="secondary"
+                variant="contained"
+                sx={{ color: "white" }}
+              >
                 Login
+              </Button>
+            </Box>
+
+            <Typography variant="h6" sx={{ m: "15px" }}>
+              Belum punya Akun?
+            </Typography>
+            <Box display="flex" justifyContent="first" mt="20px">
+              <Button
+                color="primary"
+                variant="contained"
+                sx={{ color: "white" }}
+                onClick={() => navigate("/register")}
+              >
+                Register
               </Button>
             </Box>
           </form>

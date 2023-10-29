@@ -17,6 +17,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import jwt_decode from "jwt-decode";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -142,6 +143,7 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
 
+            {/* ADMIN MENU */}
             {isLoggedIn && userRole === 1 && (
               <>
                 <Typography
@@ -158,9 +160,23 @@ const Sidebar = () => {
                   selected={selected}
                   setSelected={setSelected}
                 />
+              </>
+            )}
+
+            {/* SM MENU */}
+            {isLoggedIn && userRole === 2 && (
+              <>
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
+                >
+                  Data Admin
+                </Typography>
+
                 <Item
                   title="Customer"
-                  to="/contacts"
+                  to="/customer"
                   icon={<PeopleOutlinedIcon />}
                   selected={selected}
                   setSelected={setSelected}
@@ -186,7 +202,33 @@ const Sidebar = () => {
                   selected={selected}
                   setSelected={setSelected}
                 />
+              </>
+            )}
 
+            {/* SM & CUSTOMER MENU */}
+            {isLoggedIn && (userRole === 2 || userRole === 6) && (
+              <>
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
+                >
+                  Transaksi
+                </Typography>
+
+                <Item
+                  title="Riwayat"
+                  to="/riwayattransaksi"
+                  icon={<ReceiptOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </>
+            )}
+
+            {/* GM & OWNER MENU */}
+            {isLoggedIn && (userRole === 4 || userRole === 5) && (
+              <>
                 <Typography
                   variant="h6"
                   color={colors.grey[300]}
@@ -236,15 +278,26 @@ const Sidebar = () => {
 
             {isLoggedIn && (
               <>
-              <Item
-              title="Profile"
-              to="/profile"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-              </>)}
-            
+                <Item
+                  title="Profile"
+                  to="/profile"
+                  icon={<PersonOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </>
+            )}
+            {!isLoggedIn && (
+              <>
+                <Item
+                  title="Register"
+                  to="/register"
+                  icon={<PersonAddAltOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </>
+            )}
 
             {isLoggedIn ? (
               <Item

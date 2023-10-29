@@ -4,21 +4,26 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const Form = () => {
+const Register = () => {
+  const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = (values) => {
-
     axios
-      .post("https://p3l-10683.et.r.appspot.com/api/v1/auth/register", { username: values.username, password: values.password })
+      .post("https://p3l-10683.et.r.appspot.com/api/v1/auth/register", {
+        username: values.username,
+        password: values.password,
+      })
       .then((result) => {
         console.log(result);
         if (result.data.message === "Username Sudah Ada") {
           alert("Username already registered! Please Login to proceed.");
           navigate("/login");
         } else {
-          alert("Registered successfully! Please Login to proceed.");
+          alert("Registered successfully!.");
           navigate("/login");
         }
       })
@@ -77,10 +82,15 @@ const Form = () => {
                 helperText={touched.password && errors.password}
                 sx={{ gridColumn: "span 3" }}
               />
-            
             </Box>
+
             <Box display="flex" justifyContent="first" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
+              <Button
+                type="submit"
+                color="secondary"
+                variant="contained"
+                sx={{ color: "white" }}
+              >
                 Register
               </Button>
             </Box>
@@ -91,27 +101,17 @@ const Form = () => {
   );
 };
 
-const phoneRegExp =
-  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
-
 const checkoutSchema = yup.object().shape({
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  contact: yup
+  username: yup.string().required("Username is required"),
+  password: yup
     .string()
-    .matches(phoneRegExp, "Phone number is not valid")
-    .required("required"),
-  address1: yup.string().required("required"),
-  address2: yup.string().required("required"),
+    .required("Password is required")
+    .min(5, "Password must be at least 5 characters")
+    .max(20, "Password must not exceed 20 characters"),
 });
 const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  contact: "",
-  address1: "",
-  address2: "",
+  username: "",
+  password: "",
 };
 
-export default Form;
+export default Register;

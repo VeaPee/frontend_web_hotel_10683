@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Box, IconButton, useTheme } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  useTheme,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 const Kamar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const navigate = useNavigate();
 
   const columns = [
     {
@@ -45,18 +57,20 @@ const Kamar = () => {
       headerName: "",
       sortable: false,
       renderCell: (params) => (
-        <IconButton
-          variant="contained"
-          color="primary"
-          sx={{
-            backgroundColor: colors.greenAccent[500],
-            color: "white",
-            borderRadius: 0,
-          }}
-          onClick={() => handleUpdate(params.row.id)}
-        >
-          Update
-        </IconButton>
+        <Link to={`/kamarupdate/${params.row.id}`}>
+          <IconButton
+            variant="contained"
+            color="primary"
+            sx={{
+              backgroundColor: colors.greenAccent[500],
+              color: "white",
+              borderRadius: 0,
+            }}
+            onClick={() => handleUpdate(params.row.id)}
+          >
+            Update
+          </IconButton>
+        </Link>
       ),
     },
     {
@@ -83,11 +97,17 @@ const Kamar = () => {
   const [data, setData] = useState([]);
   const [token, setToken] = useState("");
 
-  const fetchData = async (currentUserToken) => {
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedRowId, setSelectedRowId] = useState(null);
+
+  const fetchData = async () => {
     try {
       const config = {
         headers: {
-          Authorization: `${currentUserToken}`,
+          Authorization: token,
         },
       };
 
@@ -108,9 +128,52 @@ const Kamar = () => {
       }));
       console.log(transformedData); // Check the transformed data
       setData(transformedData);
+      setFilteredData(transformedData); // Initialize filteredData with all data
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleUpdate = (id) => {
+    navigate(`/kamarupdate/${id}`);
+  };
+
+  const handleDelete = (id) => {
+    setSelectedRowId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async (id) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: token,
+        },
+      };
+
+      await axios.delete(
+        `https://p3l-10683.et.r.appspot.com/api/v1/kamar/deleteKamar/${id}`,
+        config
+      );
+
+      // Refresh the page after successful deletion
+      fetchData(token);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    const filtered = data.filter((item) => {
+      const lowerCaseQuery = query.toLowerCase();
+      const lowerCaseName = item.jenisKamar.toLowerCase();
+      return lowerCaseName.includes(lowerCaseQuery);
+    });
+
+    setFilteredData(filtered);
   };
 
   const getCurrentUserToken = () => {
@@ -135,6 +198,37 @@ const Kamar = () => {
   return (
     <Box m="20px">
       <Header title="Kamar" subtitle="Managing Kamar" />
+      <Box display="flex" justifyContent="first" mt="20px">
+        <IconButton
+          variant="contained"
+          color="secondary"
+          sx={{
+            backgroundColor: colors.blueAccent[500],
+            color: "white",
+            borderRadius: 0,
+          }}
+          onClick={() => navigate("/kamarcreate")}
+        >
+          Create
+        </IconButton>
+      </Box>
+
+      <Box
+        sx={{
+          marginTop: "20px",
+          display: "flex",
+          justifyContent: "flex-end",
+          paddingRight: "20px",
+        }}
+      >
+        <TextField
+          label="Search"
+          variant="outlined"
+          value={searchQuery}
+          onChange={handleSearch}
+        />
+      </Box>
+
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -164,8 +258,35 @@ const Kamar = () => {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={data} columns={columns} />
+        <DataGrid
+          rows={filteredData}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+          disableSelectionOnClick
+        />
       </Box>
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Delete Confirmation</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this item?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button
+            onClick={() => {
+              setDeleteDialogOpen(false);
+              handleConfirmDelete(selectedRowId);
+            }}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
