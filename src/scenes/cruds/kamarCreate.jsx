@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, TextField, Snackbar, AlertTitle } from "@mui/material";
-import Alert from "@mui/material/Alert";
+import { Box, Button, TextField} from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -40,6 +39,7 @@ const KamarCreate = () => {
           luas: values.luas,
           fasilitas: values.fasilitas,
           jumlah_bed: values.jumlah_bed,
+          nomor_kamar: values.nomor_kamar,
         },
         config
       )
@@ -174,6 +174,19 @@ const KamarCreate = () => {
                 helperText={touched.jumlah_bed && errors.jumlah_bed}
                 sx={{ gridColumn: "span 7" }}
               />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Nomor Kamar"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.nomor_kamar}
+                name="nomor_kamar"
+                error={!!touched.nomor_kamar && !!errors.nomor_kamar}
+                helperText={touched.nomor_kamar && errors.nomor_kamar}
+                sx={{ gridColumn: "span 7" }}
+              />
             </Box>
 
             <Box display="flex" justifyContent="first" mt="20px">
@@ -200,6 +213,7 @@ const checkoutSchema = yup.object().shape({
   luas: yup.number().required("Luas is required"),
   fasilitas: yup.string().required("Fasilitas is required"),
   jumlah_bed: yup.number().required("Jumlah Bed is required"),
+  nomor_kamar: yup.string().required("Nomor Kamar is required"),
 });
 const initialValues = {
   jenisKamar: "",
@@ -208,6 +222,7 @@ const initialValues = {
   luas: "",
   fasilitas: "",
   jumlah_bed: "",
+  nomor_kamar: "",
 };
 
 export default KamarCreate;

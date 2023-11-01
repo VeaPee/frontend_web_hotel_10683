@@ -176,6 +176,7 @@ const tarifCreate = () => {
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.seasonId}
+                placeholder="Season"
                 name="seasonId"
                 error={!!touched.seasonId && !!errors.seasonId}
                 helpertext={touched.seasonId && errors.seasonId}
@@ -195,6 +196,7 @@ const tarifCreate = () => {
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.kamarId}
+                placeholder="Kamar"
                 name="kamarId"
                 error={!!touched.kamarId && !!errors.kamarId}
                 helpertext={touched.kamarId && errors.kamarId}

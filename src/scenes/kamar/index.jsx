@@ -53,6 +53,11 @@ const Kamar = () => {
       flex: 1,
     },
     {
+      field: "nomor_kamar",
+      headerName: "Nomor Kamar",
+      flex: 1,
+    },
+    {
       field: "update",
       headerName: "",
       sortable: false,
@@ -125,6 +130,7 @@ const Kamar = () => {
         kapasitas: item.kapasitas,
         luas: item.luas,
         fasilitas: item.fasilitas,
+        nomor_kamar: item.nomor_kamar,
       }));
       console.log(transformedData); // Check the transformed data
       setData(transformedData);
