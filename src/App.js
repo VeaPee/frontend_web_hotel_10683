@@ -13,6 +13,9 @@ import UpdatePassword from "./scenes/cruds/passwordUpdate";
 import Kamar from "./scenes/kamar";
 import KamarCreate from "./scenes/cruds/kamarCreate";
 import KamarUpdate from "./scenes/cruds/kamarUpdate";
+import KamarAvailability from "./scenes/cruds/kamarAvailability";
+import DetailKamarPage from "./scenes/cruds/kamarDetail"
+import PemesananKamarPage from "./scenes/cruds/pemesananKamar"
 
 import Customer from "./scenes/customer";
 import CustomerCreate from "./scenes/cruds/customerCreate";
@@ -47,6 +50,11 @@ function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
 
+  let cart = [
+    { id: 1, jenisKamar: "Standard Room", jenisBed: "Single Bed", jumlah_bed: 1 },
+    // Add more dummy data as needed
+  ];
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
@@ -72,7 +80,10 @@ function App() {
                 <Route path="/kamar" element={<Kamar />} />
                 <Route path="/kamarcreate" element={<KamarCreate />} />
                 <Route path="/kamarupdate/:id" element={<KamarUpdate />} />
-
+                <Route path="/KamarAvailability" element={<KamarAvailability />} />
+                <Route path="/DetailKamarPage/:id" element={<DetailKamarPage />} />
+                <Route path="/pemesananKamar" element={<PemesananKamarPage/>} />
+                
                 <Route path="/season" element={<Season />} />
                 <Route path="/seasoncreate" element={<SeasonCreate />} />
                 <Route path="/seasonupdate/:id" element={<SeasonUpdate />} />

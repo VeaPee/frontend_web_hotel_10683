@@ -51,7 +51,7 @@ const PasswordUpdate = () => {
         navigate("/updatepassword");
       } else {
         alert("Ubah Password Berhasil! Please Login to proceed.");
-        navigate("/login");
+        navigate("/logout");
       }
     } catch (error) {
       console.log(error);

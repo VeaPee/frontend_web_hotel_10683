@@ -202,12 +202,7 @@ const Sidebar = () => {
                   selected={selected}
                   setSelected={setSelected}
                 />
-              </>
-            )}
 
-            {/* SM & CUSTOMER MENU */}
-            {isLoggedIn && (userRole === 2 || userRole === 6) && (
-              <>
                 <Typography
                   variant="h6"
                   color={colors.grey[300]}
@@ -216,6 +211,39 @@ const Sidebar = () => {
                   Transaksi
                 </Typography>
 
+                <Item
+                  title="Pesan Kamar"
+                  to="/kamaravailabilitysm"
+                  icon={<BedroomParentOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </>
+            )}
+            {/* CUSTOMER MENU */}
+            {isLoggedIn &&
+              (userRole === 6) && (
+                <>
+                  <Typography
+                    variant="h6"
+                    color={colors.grey[300]}
+                    sx={{ m: "15px 0 5px 20px" }}
+                  >
+                    Transaksi
+                  </Typography>
+
+                  <Item
+                    title="Pesan Kamar"
+                    to="/kamaravailability"
+                    icon={<BedroomParentOutlinedIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </>
+              )}
+            {/* SM & CUSTOMER MENU */}
+            {isLoggedIn && (userRole === 2 || userRole === 6) && (
+              <>
                 <Item
                   title="Riwayat"
                   to="/riwayattransaksi"

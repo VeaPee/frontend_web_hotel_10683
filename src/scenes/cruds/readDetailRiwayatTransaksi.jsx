@@ -24,16 +24,18 @@ const DetailRiwayatTransaksi = () => {
   const [pegawaiThing, setPegawaiThing] = useState(0);
   const [pegawaiNama, setpegawaiNama] = useState("");
 
-  const [customerThing, setCustomerThing] = useState(0);
+  const [customerThing, setCustomerThing] = useState(6);
   const [customerData, setCustomerData] = useState([]);
 
   // Value Calculation
+
+  let totalFasilitas = 0;
 
   const totalKamar = transformedData
     .flatMap((data) => data.kamar)
     .reduce((total, kamar) => total + kamar.jumlahKamar * kamar.harga, 0);
 
-  const totalFasilitas = transformedData
+  totalFasilitas = transformedData
     .flatMap((data) => data.fasilitas)
     .reduce(
       (total, fasilitas) => total + fasilitas.jumlahFasilitas * fasilitas.harga,
@@ -90,21 +92,26 @@ const DetailRiwayatTransaksi = () => {
                   harga: dataKamar.Kamar.Tarif.map((tarif) => tarif.harga),
                 })
               ),
-              fasilitas: response.data.data.DetailReservasiFasilitas.map(
-                (dataFasilitas) => ({
-                  idF: dataFasilitas.id,
-                  fasilitasId: dataFasilitas.fasilitasId,
-                  jumlahFasilitas: dataFasilitas.jumlah,
-                  subtotalFasilitas: dataFasilitas.subtotal,
-                  createdAt: dataFasilitas.createdAt,
-                  nama_fasilitas:
-                    dataFasilitas.FasilitasTambahan.nama_fasilitas,
-                  harga: dataFasilitas.FasilitasTambahan.harga,
-                })
-              ),
+
+              fasilitas:
+                response.data.data.DetailReservasiFasilitas.length > 0
+                  ? response.data.data.DetailReservasiFasilitas.map(
+                      (dataFasilitas) => ({
+                        idF: dataFasilitas.id,
+                        fasilitasId: dataFasilitas.fasilitasId,
+                        jumlahFasilitas: dataFasilitas.jumlah,
+                        subtotalFasilitas: dataFasilitas.subtotal,
+                        createdAt: dataFasilitas.createdAt,
+                        nama_fasilitas:
+                          dataFasilitas.FasilitasTambahan.nama_fasilitas,
+                        harga: dataFasilitas.FasilitasTambahan.harga,
+                      })
+                    )
+                  : null,
             }))
           : [];
       console.log(transformedData);
+      console.log(transformedData.length);
       setTransformedData(transformedData);
 
       //   SET ID
@@ -114,17 +121,20 @@ const DetailRiwayatTransaksi = () => {
       }
 
       //   PEGAWAI
-      const responsePegawai = await axios.get(
-        `https://p3l-10683.et.r.appspot.com/api/v1/customer/getPegawaiByID/${pegawaiThing}`,
-        config
-      );
+      let pegawaiNama = "";
+      if (pegawaiThing) {
+        const responsePegawai = await axios.get(
+          `https://p3l-10683.et.r.appspot.com/api/v1/customer/getPegawaiByID/${pegawaiThing}`,
+          config
+        );
 
-      console.log(pegawaiThing);
-      const pegawaiNama = responsePegawai.data.data.pegawai;
+        console.log(pegawaiThing);
+        pegawaiNama = responsePegawai.data.data?.pegawai?.nama;
 
-      console.log(responsePegawai);
-      console.log(pegawaiNama);
-      setpegawaiNama(pegawaiNama.nama);
+        console.log(responsePegawai);
+        console.log(pegawaiNama);
+      }
+      setpegawaiNama(pegawaiNama);
 
       //   CUSTOMER
       const responseCustomer = await axios.get(
@@ -213,6 +223,18 @@ const DetailRiwayatTransaksi = () => {
                 "sidebar6 footer footer sidebar3"`,
           }}
         >
+          {!isLoading ? (
+            <>
+              {transformedData.length > 0 ? (
+                <>{/* Render UI with data */}</>
+              ) : (
+                <p>No data available.</p>
+              )}
+            </>
+          ) : (
+            <p>Loading...</p>
+          )}
+
           {!isLoading && transformedData.length > 0 ? (
             <>
               <TextField
@@ -308,7 +330,7 @@ const DetailRiwayatTransaksi = () => {
               />
             </>
           ) : (
-            <p>Loading...</p>
+            <p></p>
           )}
         </Box>
 
@@ -386,7 +408,7 @@ const DetailRiwayatTransaksi = () => {
               />
             </>
           ) : (
-            <p>Loading...</p>
+            <p></p>
           )}
         </Box>
 
@@ -459,19 +481,18 @@ const DetailRiwayatTransaksi = () => {
               </Table>
             </div>
           ) : (
-            <p>Loading...</p>
+            <p></p>
           )}
         </Box>
-
-        <Divider sx={{ my: 1, border: "1px solid black" }} />
-        <Box sx={{ textAlign: "center", m: 1, fontWeight: "bold" }}>
-          LAYANAN
-        </Box>
-        <Divider sx={{ my: 1, border: "1px solid black" }} />
 
         <Box>
           {!isLoading && transformedData.length > 0 ? (
             <div>
+              <Divider sx={{ my: 1, border: "1px solid black" }} />
+              <Box sx={{ textAlign: "center", m: 1, fontWeight: "bold" }}>
+                LAYANAN
+              </Box>
+              <Divider sx={{ my: 1, border: "1px solid black" }} />
               <Table style={{ borderCollapse: "collapse", width: "100%" }}>
                 <TableHead>
                   <TableRow>
@@ -544,7 +565,7 @@ const DetailRiwayatTransaksi = () => {
               </Table>
             </div>
           ) : (
-            <p>Loading...</p>
+            <p></p>
           )}
         </Box>
         <Box
@@ -629,7 +650,8 @@ const DetailRiwayatTransaksi = () => {
               />
             </>
           ) : (
-            <p>Loading...</p>
+            // Loading
+            <p></p>
           )}
         </Box>
 
