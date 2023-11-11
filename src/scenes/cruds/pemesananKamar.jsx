@@ -1,13 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Card, CardContent, Typography } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  TextField,
+  Grid,
+  Box,
+  Snackbar,
+} from "@material-ui/core";
+import { AlertTitle } from "@mui/material";
+import { Formik } from "formik";
+import Alert from "@mui/material/Alert";
+import * as yup from "yup";
+import axios from "axios";
+
+const FacilityItem = ({ fasilitas, quantity, onQuantityChange }) => {
+  return (
+    <div key={fasilitas.id}>
+      <Typography variant="body1">{fasilitas.nama_fasilitas}</Typography>
+      <TextField
+        type="number"
+        label="Quantity"
+        value={quantity || 0}
+        onChange={(e) => onQuantityChange(fasilitas.id, e.target.value)}
+      />
+    </div>
+  );
+};
 
 const PemesananKamarPage = () => {
-  // Use the useLocation hook to get the location object
   const location = useLocation();
-  console.log("Location:", location);
   const cart = location?.state?.cart || [];
-  console.log("Cart:", cart);
+  const tanggalAwal = location?.state?.dataTanggalAwal || "";
+  const tanggalAkhir = location?.state?.dataTanggalAkhir || "";
+  const calculatedHarga = location?.state?.calculatedHarga || "";
+
+  console.log(calculatedHarga)
+  const [data, setData] = useState([]);
+  const [token, setToken] = useState("");
+  const [quantities, setQuantities] = useState({});
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   if (!cart || cart.length === 0) {
     return (
@@ -22,27 +63,275 @@ const PemesananKamarPage = () => {
     );
   }
 
+  const fetchData = async (currentUserToken) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `${currentUserToken}`,
+        },
+      };
+
+      const response = await axios.get(
+        "https://p3l-10683.et.r.appspot.com/api/v1/fasilitas/getAllFasilitas",
+        config
+      );
+
+      const transformedData = response.data.data.map((item) => {
+        return {
+          id: item.id,
+          nama_fasilitas: item.nama_fasilitas,
+          satuan: item.satuan,
+          harga: item.harga,
+        };
+      });
+
+      setData(transformedData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleFormSubmit = async (values, currentUserToken) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${currentUserToken}`,
+      },
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:6000/api/v1/transaksi/transaksiReservasi",
+        {
+          check_in: tanggalAwal,
+          check_out: tanggalAkhir,
+          jumlahDewasa: values.jumlahDewasa,
+          jumlahAnakAnak: values.jumlahAnakAnak,
+        },
+        config
+      );
+
+      console.log(response);
+
+      const responseKamar = await axios.post(
+        "http://localhost:6000/api/v1/transaksi/transaksiKamar",
+        {
+          // reservasiId: ,
+          // fasilitasId: ,
+          jumlah: quantities,
+          // subtotal:
+        },
+        config
+      );
+
+      console.log(responseKamar);
+
+      const responseFasilitas = await axios.post(
+        "http://localhost:6000/api/v1/transaksi/transaksiFasilitas",
+        {
+          // reservasiId: ,
+          // kamarId: ,
+          jumlah: 1,
+          // subtotal:
+        },
+        config
+      );
+
+      console.log(responseFasilitas);
+
+      if (response.data.error) {
+        setSnackbarMessage(response.data.message);
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      } else {
+        alert("Berhasil menambah Reservasi!.");
+        setSnackbarMessage("Berhasil menambah Reservasi!");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+        // navigate("/season");
+      }
+    } catch (error) {
+      console.log(error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        const errorMessage = error.response.data.message;
+        setSnackbarMessage(errorMessage);
+      } else {
+        setSnackbarMessage("An error occurred. Please try again later.");
+      }
+
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
+  };
+
+  const getCurrentUserToken = () => {
+    return localStorage.getItem("token");
+  };
+
+  const handleQuantityChange = (fasilitasId, value) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [fasilitasId]: value,
+    }));
+  };
+
+  // const handleSubmit = () => {
+  //   // Implement your logic to submit selected quantities
+  //   console.log("Selected Quantities:", quantities);
+  // };
+
+  useEffect(() => {
+    const currentUserToken = getCurrentUserToken();
+    setToken(currentUserToken);
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      fetchData(token);
+    }
+  }, [token]);
+
   return (
-    <div>
-      <Typography variant="h4" align="center" gutterBottom>
-        Pemesanan Kamar
-      </Typography>
-      {cart.map((item) => (
-        <Card key={item.id} style={{ margin: "auto", marginTop: "10px" }}>
-          <CardContent>
-            <Typography variant="h6" style={{ fontWeight: "bold" }}>
-              {item.jenisKamar}
+    <Box
+      m="20px"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        minHeight: "100vh",
+      }}
+    >
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity={snackbarSeverity}>
+          <AlertTitle>
+            {snackbarSeverity === "error" ? "Error" : "Success"}
+          </AlertTitle>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
+      <Formik
+        onSubmit={(values) => handleFormSubmit(values, token)}
+        initialValues={initialValues}
+        validationSchema={checkoutSchema}
+      >
+        {({ values, errors, touched, handleChange, handleSubmit }) => (
+          <div>
+            <Typography variant="h4" align="center" gutterBottom>
+              Pemesanan Kamar
             </Typography>
-            <Typography variant="body1">Jenis Bed: {item.jenisBed}</Typography>
-            <Typography variant="body1">
-              Jumlah Bed: {item.jumlah_bed}
+            <Typography variant="h6" align="center">
+              Tanggal Awal: {tanggalAwal} - Tanggal Akhir: {tanggalAkhir}
             </Typography>
-            {/* Add more details as needed */}
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+            {cart.map((kamar, index) => (
+              <Card
+                key={kamar.id}
+                style={{ margin: "auto", marginTop: "10px" }}
+              >
+                <CardContent>
+                  <Typography variant="h6" style={{ fontWeight: "bold" }}>
+                    {kamar.jenisKamar}
+                  </Typography>
+                  <Typography variant="body1">
+                    Jenis Bed: {kamar.jenisBed}
+                  </Typography>
+                  <Typography variant="body1">
+                    Jumlah Bed: {kamar.jumlah_bed}
+                  </Typography>
+                  <Typography variant="body1">
+                    Kapasitas: {kamar.kapasitas} Orang
+                  </Typography>
+                  <Typography variant="body1">
+                    Harga: Rp. {calculatedHarga[index]?.harga}
+                  </Typography>
+                  {/* Add more details as needed */}
+                </CardContent>
+              </Card>
+            ))}
+            <Typography
+              variant="h4"
+              align="center"
+              gutterBottom
+              style={{ marginTop: "20px" }}
+            >
+              Tambah Fasilitas
+            </Typography>
+            <Grid container spacing={2}>
+              {data.map((fasilitas) => (
+                <Grid item xs={12} sm={6} md={4} key={fasilitas.id}>
+                  <FacilityItem
+                    fasilitas={fasilitas}
+                    quantity={quantities[fasilitas.id]}
+                    onQuantityChange={handleQuantityChange}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+            <Typography
+              variant="h4"
+              align="center"
+              gutterBottom
+              style={{ marginTop: "20px" }}
+            >
+              Jumlah Penginap
+            </Typography>
+            <Grid container spacing={2} justifyContent="center">
+              <TextField
+                label="Jumlah Dewasa"
+                type="number"
+                name="jumlahDewasa"
+                value={values.jumlahDewasa}
+                onChange={handleChange}
+                error={touched.jumlahDewasa && Boolean(errors.jumlahDewasa)}
+                helperText={touched.jumlahDewasa && errors.jumlahDewasa}
+              />
+              <TextField
+                label="Jumlah Anak-Anak"
+                type="number"
+                name="jumlahAnakAnak"
+                value={values.jumlahAnakAnak}
+                onChange={handleChange}
+                error={touched.jumlahAnakAnak && Boolean(errors.jumlahAnakAnak)}
+                helperText={touched.jumlahAnakAnak && errors.jumlahAnakAnak}
+              />
+            </Grid>
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+
+                alignItems: "center",
+                marginTop: "80px",
+              }}
+            >
+              Submit
+            </Button>
+          </div>
+        )}
+      </Formik>
+    </Box>
   );
+};
+
+const checkoutSchema = yup.object().shape({
+  jumlahDewasa: yup.number().required("Jumlah Dewasa is required"),
+  jumlahAnakAnak: yup.number().required("Jumlah Anak-Anak is required"),
+});
+
+const initialValues = {
+  jumlahDewasa: "",
+  jumlahAnakAnak: "",
 };
 
 export default PemesananKamarPage;

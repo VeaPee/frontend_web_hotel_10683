@@ -39,6 +39,9 @@ const KamarAvailability = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
+  const [dataTanggalAwal, setDataTanggalAwal] = useState("");
+  const [dataTanggalAkhir, setDataTanggalAkhir] = useState("");
+
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -54,6 +57,15 @@ const KamarAvailability = () => {
   const [confirmRemoveDialogOpen, setConfirmRemoveDialogOpen] = useState(false);
   const [selectedCartItemToRemove, setSelectedCartItemToRemove] =
     useState(null);
+
+  const calculateAdjustedHarga = (tarif) => {
+    const adjustedHarga =
+      tarif.harga - tarif.harga * tarif.Season.perubahan_harga;
+    setCalculatedHarga = adjustedHarga;
+    return adjustedHarga;
+  };
+
+  const [calculatedHarga, setCalculatedHarga] = useState([]);
 
   // const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
 
@@ -103,6 +115,9 @@ const KamarAvailability = () => {
 
         console.log(transformedData);
         setData(transformedData);
+
+        setDataTanggalAwal(values.tanggalAwal);
+        setDataTanggalAkhir(values.tanggalAkhir);
 
         setSnackbarMessage("Berhasil Mencari!");
         setSnackbarSeverity("success");
@@ -266,9 +281,6 @@ const KamarAvailability = () => {
                           <Typography variant="subtitle1">
                             Fasilitas: {item.fasilitas}
                           </Typography>
-                          <Typography variant="subtitle1">
-                            Rp.{item.Tarif.harga}
-                          </Typography>
                           <IconButton
                             color="secondary"
                             onClick={() => removeFromCart(item.id)}
@@ -284,7 +296,10 @@ const KamarAvailability = () => {
                       {/* Use the navigate function to navigate to the "/pemesananKamar" route */}
                       <Button
                         onClick={() =>
-                          navigate("/pemesananKamar", { state: { cart } })
+                          navigate("/pemesananKamar", {
+                            state: { cart, dataTanggalAwal, dataTanggalAkhir, calculatedHarga },
+                          })
+                          
                         }
                         variant="contained"
                         color="primary"
@@ -409,87 +424,131 @@ const KamarAvailability = () => {
                   Cari Kamar
                 </Button>
               </Box>
+
+              <Box mt={4}>
+                {data.length > 0 ? (
+                  data.map((item) => (
+                    <Card key={item.id} sx={{ mb: 2 }}>
+                      <CardContent style={{ position: "relative" }}>
+                        <Typography variant="h6" component="div">
+                          {item.jenisKamar}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Jenis Bed: {item.jenisBed}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Jumlah Bed: {item.jumlah_bed}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Kapasitas: {item.kapasitas} Orang
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Luas: {item.luas} m<sup>2</sup>
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Fasilitas: {item.fasilitas}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {item.Tarif.reduce((acc, tarif) => {
+                            const tarifTanggalAwal = new Date(
+                              tarif.Season.tanggal_awal
+                            );
+                            const tarifTanggalAkhir = new Date(
+                              tarif.Season.tanggal_akhir
+                            );
+                            const searchTanggalAwal = new Date(
+                              values.tanggalAwal
+                            );
+                            const searchTanggalAkhir = new Date(
+                              values.tanggalAkhir
+                            );
+
+                            // Check if the selected date range falls within the specified season range
+                            if (
+                              searchTanggalAwal >= tarifTanggalAwal &&
+                              searchTanggalAkhir <= tarifTanggalAkhir
+                            ) {
+                              // Check if jenis_season is not "normal"
+                              if (tarif.Season.jenis_season !== "normal") {
+                                const adjustedHarga =
+                                  calculateAdjustedHarga(tarif);
+                                // If an adjusted tariff is found, render it and stop further iteration
+                                return (
+                                  <div
+                                    key={tarif.id}
+                                    style={{
+                                      fontSize: "1.5rem",
+                                      position: "absolute",
+                                      top: 0,
+                                      right: "30px",
+                                      zIndex: 1,
+                                    }}
+                                  >
+                                    Rp. {adjustedHarga}
+                                  </div>
+                                );
+                              } else if (!acc) {
+                                // If it's a "normal" tariff and no adjusted tariff has been found, render it
+                                acc = (
+                                  <div
+                                    key={tarif.id}
+                                    style={{
+                                      fontSize: "1.5rem",
+                                      position: "absolute",
+                                      top: 0,
+                                      right: "30px",
+                                      zIndex: 1,
+                                    }}
+                                  >
+                                    Rp. {tarif.harga}
+                                  </div>
+                                );
+                              }
+                            }
+
+                            return acc; // Return the accumulator (either adjusted or normal tariff) for the next iteration
+                          }, null)}
+                        </Typography>
+
+                        <IconButton
+                          color="primary"
+                          onClick={() => addToCart(item)}
+                        >
+                          <AddShoppingCart />
+                        </IconButton>
+                      </CardContent>
+
+                      <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="flex-end"
+                        sx={{ position: "relative" }}
+                      >
+                        <Box
+                          sx={{
+                            position: "absolute",
+                            bottom: "8px",
+                            right: "8px",
+                          }}
+                        >
+                          <Button
+                            component={Link}
+                            to={`/DetailKamarPage/${item.id}`}
+                            variant="outlined"
+                          >
+                            Detail Kamar
+                          </Button>
+                        </Box>
+                      </Box>
+                    </Card>
+                  ))
+                ) : (
+                  <Typography variant="body1">No results found.</Typography>
+                )}
+              </Box>
             </form>
           )}
         </Formik>
-
-        <Box mt={4}>
-          {data.length > 0 ? (
-            data.map((item) => (
-              <Card key={item.id} sx={{ mb: 2 }}>
-                <CardContent>
-                  <Typography variant="h6" component="div">
-                    {item.jenisKamar}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Jenis Bed: {item.jenisBed}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Jumlah Bed: {item.jumlah_bed}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Kapasitas: {item.kapasitas} Orang
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Luas: {item.luas} m<sup>2</sup>
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Fasilitas: {item.fasilitas}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {item.Tarif.map((tarif) => {
-                      const tarifTanggalAwal = new Date(
-                        tarif.Season.tanggal_awal
-                      );
-                      const tarifTanggalAkhir = new Date(
-                        tarif.Season.tanggal_akhir
-                      );
-                      const searchTanggalAwal = new Date(values.tanggalAwal);
-                      const searchTanggalAkhir = new Date(values.tanggalAkhir);
-
-                      if (
-                        searchTanggalAwal >= tarifTanggalAwal &&
-                        searchTanggalAkhir <= tarifTanggalAkhir
-                      ) {
-                        // Check if jenis_season is not "normal"
-                        if (tarif.Season.jenis_season !== "normal") {
-                          return <div key={tarif.id}>Rp. {tarif.harga}</div>;
-                        }
-                      }
-
-                      return null;
-                    })}
-                  </Typography>
-
-                  <IconButton color="primary" onClick={() => addToCart(item)}>
-                    <AddShoppingCart />
-                  </IconButton>
-                </CardContent>
-
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="flex-end"
-                  sx={{ position: "relative" }}
-                >
-                  <Box
-                    sx={{ position: "absolute", bottom: "8px", right: "8px" }}
-                  >
-                    <Button
-                      component={Link}
-                      to={`/DetailKamarPage/${item.id}`}
-                      variant="outlined"
-                    >
-                      Detail Kamar
-                    </Button>
-                  </Box>
-                </Box>
-              </Card>
-            ))
-          ) : (
-            <Typography variant="body1">No results found.</Typography>
-          )}
-        </Box>
       </Box>
     </Box>
   );
