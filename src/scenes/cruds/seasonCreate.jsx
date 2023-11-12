@@ -32,7 +32,7 @@ const SeasonCreate = () => {
 
     try {
       const response = await axios.post(
-        "https://p3l-10683.et.r.appspot.com/api/v1/season/addSeason",
+        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/season/addSeason",
         {
           jenis_season: values.jenis_season,
           tanggal_awal: values.tanggal_awal,

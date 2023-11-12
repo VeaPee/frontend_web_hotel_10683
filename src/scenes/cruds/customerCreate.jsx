@@ -31,7 +31,9 @@ const CustomerCreate = () => {
 
     axios
       .post(
-        `https://p3l-10683.et.r.appspot.com/api/v1/customer/addCustomer`,
+        // `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/addCustomer`,
+        `http://localhost:6000/api/v1/customer/addCustomer`,
+        
         {
           nama_customer: values.nama_customer,
           nama_institusi: values.nama_institusi,

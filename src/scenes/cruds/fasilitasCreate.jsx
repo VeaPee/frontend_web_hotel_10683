@@ -31,7 +31,7 @@ const FasilitasCreate = () => {
 
     axios
       .post(
-        "https://p3l-10683.et.r.appspot.com/api/v1/fasilitas/addFasilitas",
+        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/fasilitas/addFasilitas",
         {
             nama_fasilitas: values.nama_fasilitas,
             satuan: values.satuan,

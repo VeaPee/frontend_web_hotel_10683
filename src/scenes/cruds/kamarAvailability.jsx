@@ -61,12 +61,15 @@ const KamarAvailability = () => {
   const calculateAdjustedHarga = (tarif) => {
     const adjustedHarga =
       tarif.harga - tarif.harga * tarif.Season.perubahan_harga;
-    setCalculatedHarga = adjustedHarga;
+
     return adjustedHarga;
   };
 
   const [calculatedHarga, setCalculatedHarga] = useState([]);
-
+  const [totalAdjustedHarga, setTotalAdjustedHarga] = useState([]);
+  const diffDays =
+      (new Date(dataTanggalAkhir) - new Date(dataTanggalAwal)) / (1000 * 60 * 60 * 24);
+      
   // const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
 
   const handleFormSubmit = (values, currentUserToken) => {
@@ -145,11 +148,40 @@ const KamarAvailability = () => {
 
   const handleConfirmDialogAction = (confirmed) => {
     if (confirmed) {
-      setCart([...cart, selectedCartItem]);
+      const adjustedHarga = selectedCartItem.Tarif.reduce((acc, tarif) => {
+        const tarifTanggalAwal = new Date(tarif.Season.tanggal_awal);
+        const tarifTanggalAkhir = new Date(tarif.Season.tanggal_akhir);
+        const searchTanggalAwal = new Date(dataTanggalAwal);
+        const searchTanggalAkhir = new Date(dataTanggalAkhir);
+
+        if (
+          searchTanggalAwal >= tarifTanggalAwal &&
+          searchTanggalAkhir <= tarifTanggalAkhir
+        ) {
+          if (tarif.Season.jenis_season !== "normal") {
+            return calculateAdjustedHarga(tarif);
+          } else if (!acc) {
+            return tarif.harga;
+          }
+        }
+
+        return acc;
+      }, null);
+
+      setCalculatedHarga([...calculatedHarga, (adjustedHarga * diffDays)]);
+
+      const itemWithAdjustedHarga = {
+        ...selectedCartItem,
+        adjustedHarga: adjustedHarga,
+      };
+
+      setCart([...cart, itemWithAdjustedHarga]);
+
       setSnackbarMessage("Kamar berhasil ditambahkan ke keranjang");
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
     }
+
     setConfirmDialogOpen(false);
     setSelectedCartItem(null);
   };
@@ -281,6 +313,9 @@ const KamarAvailability = () => {
                           <Typography variant="subtitle1">
                             Fasilitas: {item.fasilitas}
                           </Typography>
+                          <Typography variant="subtitle1">
+                            Adjusted Harga: Rp. {item.adjustedHarga * diffDays}
+                          </Typography>
                           <IconButton
                             color="secondary"
                             onClick={() => removeFromCart(item.id)}
@@ -295,12 +330,17 @@ const KamarAvailability = () => {
                     <div>
                       {/* Use the navigate function to navigate to the "/pemesananKamar" route */}
                       <Button
-                        onClick={() =>
+                        onClick={() => {
+                          console.log("Calculated Harga:", calculatedHarga);
                           navigate("/pemesananKamar", {
-                            state: { cart, dataTanggalAwal, dataTanggalAkhir, calculatedHarga },
-                          })
-                          
-                        }
+                            state: {
+                              cart,
+                              dataTanggalAwal,
+                              dataTanggalAkhir,
+                              calculatedHarga,
+                            },
+                          });
+                        }}
                         variant="contained"
                         color="primary"
                       >
@@ -484,8 +524,9 @@ const KamarAvailability = () => {
                                       zIndex: 1,
                                     }}
                                   >
-                                    Rp. {adjustedHarga}
+                                    Rp. {adjustedHarga * diffDays}
                                   </div>
+                                  
                                 );
                               } else if (!acc) {
                                 // If it's a "normal" tariff and no adjusted tariff has been found, render it
@@ -500,7 +541,7 @@ const KamarAvailability = () => {
                                       zIndex: 1,
                                     }}
                                   >
-                                    Rp. {tarif.harga}
+                                    Rp. {tarif.harga * diffDays}
                                   </div>
                                 );
                               }
@@ -559,8 +600,10 @@ const checkoutSchema = yup.object().shape({
   tanggalAkhir: yup.string().required("Tanggal is required"),
 });
 const initialValues = {
-  tanggalAwal: "2023-11-14",
-  tanggalAkhir: "2023-11-16",
+  tanggalAwal: "2023-12-23",
+  tanggalAkhir: "2023-12-24",
+  jumlahDewasa: 0,
+  jumlahAnakAnak: 0
 };
 
 export default KamarAvailability;

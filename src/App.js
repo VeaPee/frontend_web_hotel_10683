@@ -14,8 +14,17 @@ import Kamar from "./scenes/kamar";
 import KamarCreate from "./scenes/cruds/kamarCreate";
 import KamarUpdate from "./scenes/cruds/kamarUpdate";
 import KamarAvailability from "./scenes/cruds/kamarAvailability";
+
+import NomorKamar from "./scenes/nomorKamar";
+import NomorKamarCreate from "./scenes/cruds/nomorKamarCreate";
+import NomorKamarUpdate from "./scenes/cruds/nomorKamarUpdate";
+
 import DetailKamarPage from "./scenes/cruds/kamarDetail"
 import PemesananKamarPage from "./scenes/cruds/pemesananKamar"
+import PemesananFasilitasPage from "./scenes/cruds/pemesananFasilitas"
+import ResumeReservasi from "./scenes/cruds/resumeReservasi"
+import KonfirmasiPembayaran from "./scenes/cruds/konfirmasiPembayaran"
+import TandaTerima from "./scenes/cruds/tandaTerima"
 
 import Customer from "./scenes/customer";
 import CustomerCreate from "./scenes/cruds/customerCreate";
@@ -80,9 +89,18 @@ function App() {
                 <Route path="/kamar" element={<Kamar />} />
                 <Route path="/kamarcreate" element={<KamarCreate />} />
                 <Route path="/kamarupdate/:id" element={<KamarUpdate />} />
+
+                <Route path="/nomorKamar" element={<NomorKamar />} />
+                <Route path="/nomorkamarcreate" element={<NomorKamarCreate />} />
+                <Route path="/nomorkamarUpdate/:id" element={<NomorKamarUpdate />} />
+
                 <Route path="/KamarAvailability" element={<KamarAvailability />} />
                 <Route path="/DetailKamarPage/:id" element={<DetailKamarPage />} />
                 <Route path="/pemesananKamar" element={<PemesananKamarPage/>} />
+                <Route path="/pemesananFasilitas" element={<PemesananFasilitasPage/>} />
+                <Route path="/resumeReservasi/:id" element={<ResumeReservasi/>} />
+                <Route path="/konfirmasiPembayaran/:id" element={<KonfirmasiPembayaran/>} />
+                <Route path="/tandaTerima/:id" element={<TandaTerima/>} />
                 
                 <Route path="/season" element={<Season />} />
                 <Route path="/seasoncreate" element={<SeasonCreate />} />

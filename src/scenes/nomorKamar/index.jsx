@@ -16,26 +16,21 @@ import Header from "../../components/Header";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-const Tarif = () => {
+const NomorKamar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
 
   const columns = [
     {
-      field: "jenis_season",
-      headerName: "Jenis Season",
+      field: "jenisKamar",
+      headerName: "Jenis Kamar",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "jenis_kamar",
-      headerName: "Jenis Kamar",
-      flex: 1,
-    },
-    {
-      field: "harga",
-      headerName: "Harga",
+      field: "nomor_kamar",
+      headerName: "Nomor Kamar",
       flex: 1,
     },
     {
@@ -43,18 +38,20 @@ const Tarif = () => {
       headerName: "",
       sortable: false,
       renderCell: (params) => (
-        <IconButton
-          variant="contained"
-          color="primary"
-          sx={{
-            backgroundColor: colors.greenAccent[500],
-            color: "white",
-            borderRadius: 0,
-          }}
-          onClick={() => handleUpdate(params.row.id)}
-        >
-          Update
-        </IconButton>
+        <Link to={`/nomorkamarupdate/${params.row.id}`}>
+          <IconButton
+            variant="contained"
+            color="primary"
+            sx={{
+              backgroundColor: colors.greenAccent[500],
+              color: "white",
+              borderRadius: 0,
+            }}
+            onClick={() => handleUpdate(params.row.id)}
+          >
+            Update
+          </IconButton>
+        </Link>
       ),
     },
     {
@@ -87,62 +84,39 @@ const Tarif = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState(null);
 
-  const fetchData = async (currentUserToken) => {
+  const fetchData = async () => {
     try {
       const config = {
         headers: {
-          Authorization: `${currentUserToken}`,
+          Authorization: token,
         },
       };
 
       const response = await axios.get(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/tarif/getAllTarif",
+        // "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar",
+        "http://localhost:6000/api/v1/kamar/getAllNomorKamar",
         config
       );
+
       console.log(response); // Check the response object and its structure
-
-      // Fetch Data from Kamar
-      const kamarResponse = await axios.get(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar",
-        config
-      );
-      console.log(kamarResponse); // Check the kamar response object and its structure
-
-      const kamarData = kamarResponse.data.data.reduce((acc, item) => {
-        acc[item.id] = item;
-        return acc;
-      }, {});
-
-      // Fetch Data from Season
-      const seasonResponse = await axios.get(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/season/getAllSeason",
-        config
-      );
-      console.log(seasonResponse); // Check the season response object and its structure
-
-      const seasonData = seasonResponse.data.data.reduce((acc, item) => {
-        acc[item.id] = item;
-        return acc;
-      }, {});
-
-      const transformedData = response.data.data.map((item) => {
-        return {
-          id: item.id,
-          jenis_season: seasonData[item.seasonId].jenis_season,
-          jenis_kamar: kamarData[item.kamarId].jenisKamar,
-          harga: item.harga,
-        };
-      });
+      const transformedData = response.data.data.map((kamar) => ({
+          id: kamar.id,
+          kamarId: kamar.kamarId,
+          nomor_kamar: kamar.nomor_kamar,
+          jenisKamar: kamar.Kamar.jenisKamar,
+      }));
+      
       console.log(transformedData); // Check the transformed data
       setData(transformedData);
       setFilteredData(transformedData); // Initialize filteredData with all data
+
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleUpdate = (id) => {
-    navigate(`/tarifupdate/${id}`);
+    navigate(`/nomorkamarupdate/${id}`);
   };
 
   const handleDelete = (id) => {
@@ -159,7 +133,8 @@ const Tarif = () => {
       };
 
       await axios.delete(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/tarif/deleteTarif/${id}`,
+        // `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/deleteKamar/${id}`,
+        `http://localhost:6000/api/v1/kamar/deleteNomorKamar/${id}`,
         config
       );
 
@@ -176,14 +151,8 @@ const Tarif = () => {
 
     const filtered = data.filter((item) => {
       const lowerCaseQuery = query.toLowerCase();
-      const harga = parseFloat(item.harga);
-      
-      if (lowerCaseQuery.includes("-")) {
-        const [min, max] = lowerCaseQuery.split("-").map(parseFloat);
-        return harga >= min && harga <= max;
-      } else {
-        return harga.toString().includes(lowerCaseQuery);
-      }
+      const lowerCaseName = item.jenisKamar.toLowerCase();
+      return lowerCaseName.includes(lowerCaseQuery);
     });
 
     setFilteredData(filtered);
@@ -198,7 +167,7 @@ const Tarif = () => {
   useEffect(() => {
     // Get the token for the current user from your authentication system
     const currentUserToken = getCurrentUserToken();
-    // console.log(currentUserToken);
+    console.log(currentUserToken);
     setToken(currentUserToken);
   }, []);
 
@@ -210,7 +179,7 @@ const Tarif = () => {
 
   return (
     <Box m="20px">
-      <Header title="Tarif" subtitle="Managing Tarif" />
+      <Header title="Kamar" subtitle="Managing Nomor Kamar" />
       <Box display="flex" justifyContent="first" mt="20px">
         <IconButton
           variant="contained"
@@ -220,7 +189,7 @@ const Tarif = () => {
             color: "white",
             borderRadius: 0,
           }}
-          onClick={() => navigate("/tarifcreate")}
+          onClick={() => navigate("/nomorkamarcreate")}
         >
           Create
         </IconButton>
@@ -235,7 +204,7 @@ const Tarif = () => {
         }}
       >
         <TextField
-          label="Search (Add MIN-MAX for Range Search)"
+          label="Search"
           variant="outlined"
           value={searchQuery}
           onChange={handleSearch}
@@ -304,4 +273,4 @@ const Tarif = () => {
   );
 };
 
-export default Tarif;
+export default NomorKamar;

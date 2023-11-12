@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -15,36 +15,25 @@ import { Formik } from "formik";
 import Alert from "@mui/material/Alert";
 import * as yup from "yup";
 import axios from "axios";
-
-const FacilityItem = ({ fasilitas, quantity, onQuantityChange }) => {
-  return (
-    <div key={fasilitas.id}>
-      <Typography variant="body1">{fasilitas.nama_fasilitas}</Typography>
-      <TextField
-        type="number"
-        label="Quantity"
-        value={quantity || 0}
-        onChange={(e) => onQuantityChange(fasilitas.id, e.target.value)}
-      />
-    </div>
-  );
-};
+import { useNavigate, Link } from "react-router-dom";
 
 const PemesananKamarPage = () => {
   const location = useLocation();
   const cart = location?.state?.cart || [];
   const tanggalAwal = location?.state?.dataTanggalAwal || "";
   const tanggalAkhir = location?.state?.dataTanggalAkhir || "";
-  const calculatedHarga = location?.state?.calculatedHarga || "";
+  const calculatedHarga = location?.state?.calculatedHarga;
 
-  console.log(calculatedHarga)
-  const [data, setData] = useState([]);
+  const navigate = useNavigate();
+  console.log(cart);
+  console.log(calculatedHarga);
   const [token, setToken] = useState("");
-  const [quantities, setQuantities] = useState({});
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const [reservasiId, setReservasiId] = useState(null);
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -63,33 +52,47 @@ const PemesananKamarPage = () => {
     );
   }
 
-  const fetchData = async (currentUserToken) => {
-    try {
-      const config = {
-        headers: {
-          Authorization: `${currentUserToken}`,
-        },
-      };
+  useEffect(() => {
+    const currentUserToken = getCurrentUserToken();
+    setToken(currentUserToken);
+  }, []);
 
-      const response = await axios.get(
-        "https://p3l-10683.et.r.appspot.com/api/v1/fasilitas/getAllFasilitas",
-        config
-      );
-
-      const transformedData = response.data.data.map((item) => {
-        return {
-          id: item.id,
-          nama_fasilitas: item.nama_fasilitas,
-          satuan: item.satuan,
-          harga: item.harga,
+  useEffect(() => {
+    const handleReservation = async () => {
+      if (reservasiId) {
+        console.log("ReservasiId:", reservasiId);
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         };
-      });
 
-      setData(transformedData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+        try {
+          console.log("SUBTOTAL = ", calculatedHarga)
+          for (const kamar of cart) {
+            const responseKamar = await axios.post(
+              "http://localhost:6000/api/v1/transaksi/transaksiKamar",
+              {
+                reservasiId: reservasiId,
+                kamarId: kamar.id,
+                jumlah: 1,
+                subtotal: calculatedHarga[cart.indexOf(kamar)],
+              },
+              config
+            );
+
+            console.log(responseKamar);
+          }
+
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+
+    handleReservation(); // Call the function when reservasiId changes
+
+  }, [reservasiId, cart, calculatedHarga, token]);
 
   const handleFormSubmit = async (values, currentUserToken) => {
     const config = {
@@ -111,43 +114,30 @@ const PemesananKamarPage = () => {
       );
 
       console.log(response);
-
-      const responseKamar = await axios.post(
-        "http://localhost:6000/api/v1/transaksi/transaksiKamar",
-        {
-          // reservasiId: ,
-          // fasilitasId: ,
-          jumlah: quantities,
-          // subtotal:
-        },
-        config
-      );
-
-      console.log(responseKamar);
-
-      const responseFasilitas = await axios.post(
-        "http://localhost:6000/api/v1/transaksi/transaksiFasilitas",
-        {
-          // reservasiId: ,
-          // kamarId: ,
-          jumlah: 1,
-          // subtotal:
-        },
-        config
-      );
-
-      console.log(responseFasilitas);
-
+      setReservasiId(response.data.data.id);
       if (response.data.error) {
         setSnackbarMessage(response.data.message);
         setSnackbarSeverity("error");
         setSnackbarOpen(true);
       } else {
-        alert("Berhasil menambah Reservasi!.");
+        // alert("Berhasil menambah Reservasi!.");
+        const newReservasiId = response.data.data.id;
+
+        setReservasiId(newReservasiId);
+        console.log("Reservasi ID:", newReservasiId);
+        
         setSnackbarMessage("Berhasil menambah Reservasi!");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
-        // navigate("/season");
+        navigate("/pemesananFasilitas", {
+          state: {
+            cart,
+            tanggalAwal,
+            tanggalAkhir,
+            calculatedHarga,
+            reservasiId: response.data.data.id,
+          },
+        });
       }
     } catch (error) {
       console.log(error);
@@ -167,32 +157,13 @@ const PemesananKamarPage = () => {
     }
   };
 
+
+
+
+
   const getCurrentUserToken = () => {
     return localStorage.getItem("token");
   };
-
-  const handleQuantityChange = (fasilitasId, value) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [fasilitasId]: value,
-    }));
-  };
-
-  // const handleSubmit = () => {
-  //   // Implement your logic to submit selected quantities
-  //   console.log("Selected Quantities:", quantities);
-  // };
-
-  useEffect(() => {
-    const currentUserToken = getCurrentUserToken();
-    setToken(currentUserToken);
-  }, []);
-
-  useEffect(() => {
-    if (token) {
-      fetchData(token);
-    }
-  }, [token]);
 
   return (
     <Box
@@ -228,7 +199,7 @@ const PemesananKamarPage = () => {
               Pemesanan Kamar
             </Typography>
             <Typography variant="h6" align="center">
-              Tanggal Awal: {tanggalAwal} - Tanggal Akhir: {tanggalAkhir}
+              {tanggalAwal} - {tanggalAkhir}
             </Typography>
             {cart.map((kamar, index) => (
               <Card
@@ -249,31 +220,12 @@ const PemesananKamarPage = () => {
                     Kapasitas: {kamar.kapasitas} Orang
                   </Typography>
                   <Typography variant="body1">
-                    Harga: Rp. {calculatedHarga[index]?.harga}
+                    Harga: Rp. {calculatedHarga[index]}
                   </Typography>
                   {/* Add more details as needed */}
                 </CardContent>
               </Card>
             ))}
-            <Typography
-              variant="h4"
-              align="center"
-              gutterBottom
-              style={{ marginTop: "20px" }}
-            >
-              Tambah Fasilitas
-            </Typography>
-            <Grid container spacing={2}>
-              {data.map((fasilitas) => (
-                <Grid item xs={12} sm={6} md={4} key={fasilitas.id}>
-                  <FacilityItem
-                    fasilitas={fasilitas}
-                    quantity={quantities[fasilitas.id]}
-                    onQuantityChange={handleQuantityChange}
-                  />
-                </Grid>
-              ))}
-            </Grid>
             <Typography
               variant="h4"
               align="center"
@@ -310,7 +262,6 @@ const PemesananKamarPage = () => {
               style={{
                 display: "flex",
                 justifyContent: "center",
-
                 alignItems: "center",
                 marginTop: "80px",
               }}

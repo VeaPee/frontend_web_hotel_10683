@@ -102,7 +102,7 @@ const Season = () => {
       };
 
       const response = await axios.get(
-        "https://p3l-10683.et.r.appspot.com/api/v1/season/getAllSeason",
+        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/season/getAllSeason",
         config
       );
       console.log(response); // Check the response object and its structure
@@ -139,7 +139,7 @@ const Season = () => {
       };
 
       await axios.delete(
-        `https://p3l-10683.et.r.appspot.com/api/v1/season/deleteSeason/${id}`,
+        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/season/deleteSeason/${id}`,
         config
       );
 

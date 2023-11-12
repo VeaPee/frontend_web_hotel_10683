@@ -46,7 +46,8 @@ const KamarUpdate = () => {
 
     axios
       .put(
-        `https://p3l-10683.et.r.appspot.com/api/v1/kamar/updateKamar/${id}`,
+        // `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/updateKamar/${id}`,
+        `http://localhost:6000/api/v1/kamar/updateKamar/${id}`,
         {
           jenisKamar: values.jenisKamar,
           jenisBed: values.jenisBed,
@@ -54,7 +55,7 @@ const KamarUpdate = () => {
           luas: values.luas,
           fasilitas: values.fasilitas,
           jumlah_bed: values.jumlah_bed,
-          nomor_kamar: values.nomor_kamar,
+          // nomor_kamar: values.nomor_kamar,
         },
         config
       )
@@ -82,7 +83,8 @@ const KamarUpdate = () => {
 
     try {
       const response = await axios.get(
-        `https://p3l-10683.et.r.appspot.com/api/v1/kamar/getKamarByID/${id}`,
+        // `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getKamarByID/${id}`,
+        `http://localhost:6000/api/v1/kamar/getKamarByID/${id}`,
         config
       );
 
@@ -96,7 +98,7 @@ const KamarUpdate = () => {
         luas: kamarData.luas,
         fasilitas: kamarData.fasilitas,
         jumlah_bed: kamarData.jumlah_bed,
-        nomor_kamar: kamarData.nomor_kamar,
+        // nomor_kamar: kamarData.nomor_kamar,
       });
     } catch (error) {
       console.log(error);
@@ -225,7 +227,7 @@ const KamarUpdate = () => {
                 helperText={touched.jumlah_bed && errors.jumlah_bed}
                 sx={{ gridColumn: "span 7" }}
               />
-              <TextField
+              {/* <TextField
                 fullWidth
                 variant="filled"
                 type="text"
@@ -237,7 +239,7 @@ const KamarUpdate = () => {
                 error={!!touched.nomor_kamar && !!errors.nomor_kamar}
                 helperText={touched.nomor_kamar && errors.nomor_kamar}
                 sx={{ gridColumn: "span 7" }}
-              />
+              /> */}
             </Box>
 
             <Box display="flex" justifyContent="first" mt="20px">
@@ -264,7 +266,7 @@ const checkoutSchema = yup.object().shape({
   luas: yup.number().required("Luas is required"),
   fasilitas: yup.string().required("Fasilitas is required"),
   jumlah_bed: yup.number().required("Jumlah Bed is required"),
-  nomor_kamar: yup.string().required("Nomor Kamar is required"),
+  // nomor_kamar: yup.string().required("Nomor Kamar is required"),
 });
 
 export default KamarUpdate;

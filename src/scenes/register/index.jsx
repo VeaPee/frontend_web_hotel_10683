@@ -13,7 +13,7 @@ const Register = () => {
 
   const handleFormSubmit = (values) => {
     axios
-      .post("https://p3l-10683.et.r.appspot.com/api/v1/auth/register", {
+      .post("https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/auth/register", {
         username: values.username,
         password: values.password,
       })

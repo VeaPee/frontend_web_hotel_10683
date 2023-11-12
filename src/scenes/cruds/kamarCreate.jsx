@@ -31,7 +31,8 @@ const KamarCreate = () => {
 
     axios
       .post(
-        "https://p3l-10683.et.r.appspot.com/api/v1/kamar/addKamar",
+        // "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/addKamar",
+        `http://localhost:6000/api/v1/kamar/addKamar`,
         {
           jenisKamar: values.jenisKamar,
           jenisBed: values.jenisBed,
@@ -39,7 +40,7 @@ const KamarCreate = () => {
           luas: values.luas,
           fasilitas: values.fasilitas,
           jumlah_bed: values.jumlah_bed,
-          nomor_kamar: values.nomor_kamar,
+          // nomor_kamar: values.nomor_kamar,
         },
         config
       )
@@ -174,7 +175,7 @@ const KamarCreate = () => {
                 helperText={touched.jumlah_bed && errors.jumlah_bed}
                 sx={{ gridColumn: "span 7" }}
               />
-              <TextField
+              {/* <TextField
                 fullWidth
                 variant="filled"
                 type="text"
@@ -186,7 +187,7 @@ const KamarCreate = () => {
                 error={!!touched.nomor_kamar && !!errors.nomor_kamar}
                 helperText={touched.nomor_kamar && errors.nomor_kamar}
                 sx={{ gridColumn: "span 7" }}
-              />
+              /> */}
             </Box>
 
             <Box display="flex" justifyContent="first" mt="20px">
@@ -213,7 +214,7 @@ const checkoutSchema = yup.object().shape({
   luas: yup.number().required("Luas is required"),
   fasilitas: yup.string().required("Fasilitas is required"),
   jumlah_bed: yup.number().required("Jumlah Bed is required"),
-  nomor_kamar: yup.string().required("Nomor Kamar is required"),
+  // nomor_kamar: yup.string().required("Nomor Kamar is required"),
 });
 const initialValues = {
   jenisKamar: "",
@@ -222,7 +223,7 @@ const initialValues = {
   luas: "",
   fasilitas: "",
   jumlah_bed: "",
-  nomor_kamar: "",
+  // nomor_kamar: "",
 };
 
 export default KamarCreate;

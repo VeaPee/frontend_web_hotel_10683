@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const DetailRiwayatTransaksi = () => {
+const TandaTerima = () => {
   const [transformedData, setTransformedData] = useState([]);
 
   const [token, setToken] = useState("");
@@ -825,4 +825,4 @@ const DetailRiwayatTransaksi = () => {
   );
 };
 
-export default DetailRiwayatTransaksi;
+export default TandaTerima;

@@ -46,7 +46,7 @@ const FasilitasUpdate = () => {
 
     axios
       .put(
-        `https://p3l-10683.et.r.appspot.com/api/v1/fasilitas/updateFasilitas/${id}`,
+        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/fasilitas/updateFasilitas/${id}`,
         {
             nama_fasilitas: values.nama_fasilitas,
             satuan: values.satuan,
@@ -78,7 +78,7 @@ const FasilitasUpdate = () => {
 
     try {
       const response = await axios.get(
-        `https://p3l-10683.et.r.appspot.com/api/v1/fasilitas/getFasilitasbyID/${id}`,
+        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/fasilitas/getFasilitasbyID/${id}`,
         config
       );
 

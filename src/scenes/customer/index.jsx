@@ -84,7 +84,7 @@ const Customer = () => {
       };
 
       const response = await axios.get(
-        "https://p3l-10683.et.r.appspot.com/api/v1/customer/getCustomer",
+        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getCustomer",
         config
       );
       console.log(response); // Check the response object and its structure

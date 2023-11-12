@@ -8,12 +8,15 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Button,
 } from "@mui/material";
 // import Header from "../../components/Header";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useNavigate, Link, useHistory, useLocation } from "react-router-dom";
 
-const DetailRiwayatTransaksi = () => {
+const ResumeReservasi = () => {
+  const navigate = useNavigate();
   const [transformedData, setTransformedData] = useState([]);
 
   const [token, setToken] = useState("");
@@ -26,6 +29,28 @@ const DetailRiwayatTransaksi = () => {
 
   const [customerThing, setCustomerThing] = useState(6);
   const [customerData, setCustomerData] = useState([]);
+
+  const location = useLocation();
+  const cart = location?.state?.cart || [];
+  const tanggalAwal = location?.state?.tanggalAwal || "";
+  const tanggalAkhir = location?.state?.tanggalAkhir || "";
+  const calculatedHarga = location?.state?.calculatedHarga;
+  const reservasiId = location?.state?.reservasiId;
+
+//   const [subtotal, setSubtotal] = useState("");
+//   const [taxTotal, setTax] = useState("");
+//   const [jaminan, setJaminan] = useState("");
+//   const [cashTotal, setCash] = useState("");
+
+  console.log("tanggal awal", tanggalAwal);
+  console.log(tanggalAkhir);
+  const diffDays =
+    (new Date(tanggalAkhir) - new Date(tanggalAwal)) / (1000 * 60 * 60 * 24);
+
+  console.log(cart);
+
+  console.log(calculatedHarga);
+  console.log(diffDays);
 
   // Value Calculation
 
@@ -54,10 +79,10 @@ const DetailRiwayatTransaksi = () => {
             const adjustedHarga = calculateAdjustedHarga(tarif);
 
             // If an adjusted tariff is found, add it to the accumulator
-            acc += kamar.jumlahKamar * adjustedHarga;
+            acc += kamar.jumlahKamar * adjustedHarga * diffDays;
           } else {
             // If it's a "normal" tariff, add it to the accumulator
-            acc += kamar.jumlahKamar * tarif.harga;
+            acc += kamar.jumlahKamar * tarif.harga * diffDays;
           }
         }
 
@@ -243,6 +268,71 @@ const DetailRiwayatTransaksi = () => {
     }
   };
 
+  //   const prepareDataForAPI = () => {
+  //     const postData = {
+  //       subtotal: totalValue,
+  //       tax: tax,
+  //       jaminan: totalKamar,
+  //       cash: cash,
+  //       deposit: deposit,
+  //       // Add other necessary fields based on your API requirements
+  //     };
+
+  //     return postData;
+  //   };
+
+  // Function to handle the post request
+  const postDataToAPI = async () => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const tax = totalFasilitas * 0.1;
+      const totalValue = totalFasilitas + totalKamar + tax;
+      const deposit = 300000;
+      const cash = totalValue - (totalKamar + deposit);
+
+      console.log("tax :",tax)
+      console.log("subtotal :",totalValue)
+      console.log("deposit :",deposit)
+      console.log("cash :",cash)
+      console.log("jaminan :",totalKamar)
+
+      const response = await axios.post(
+        `http://localhost:6000/api/v1/transaksi/konfirmasiResume/${id}`,
+        {
+          tax: tax,
+          subtotal: totalValue,
+          jaminan: totalKamar,
+          cash: cash,
+          deposit: deposit,
+        },
+        config
+      );
+
+      console.log(response.data);
+
+      navigate(`/konfirmasiPembayaran/${reservasiId}`, {
+        state: {
+          cart,
+          tanggalAwal,
+          tanggalAkhir,
+          calculatedHarga,
+          reservasiId,
+          totalKamar
+        },
+      });
+
+      // Handle success or additional logic based on the response
+    } catch (error) {
+      console.error(error);
+      // Handle errors or display error messages
+    }
+  };
+
   const getCurrentUserToken = () => {
     return localStorage.getItem("token");
   };
@@ -280,7 +370,7 @@ const DetailRiwayatTransaksi = () => {
       <Box sx={{ textAlign: "center", m: 1 }}>Telp. (0274) 487711.</Box>
 
       <Divider sx={{ my: 1, border: "1px solid black" }} />
-      <Box sx={{ textAlign: "center", m: 1, fontWeight: "bold" }}>INVOICE</Box>
+      <Box sx={{ textAlign: "center", m: 1, fontWeight: "bold" }}>RESUME</Box>
       <Divider sx={{ my: 1, border: "1px solid black" }} />
 
       <form>
@@ -330,49 +420,13 @@ const DetailRiwayatTransaksi = () => {
                 }}
                 InputProps={{ readOnly: true, disableUnderline: true }}
               />
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="No. Invoice"
-                value={
-                  transformedData &&
-                  transformedData[0] &&
-                  transformedData[0].NotaPelunasan &&
-                  transformedData[0].NotaPelunasan[0]
-                    ? transformedData[0].NotaPelunasan[0].no_invoice ||
-                    transformedData[0].prefix_reservasi ||
-                      ""
-                    : ""
-                }
-                name="no_invoice"
-                sx={{
-                  gridColumn: "span 2",
-                  gridArea: "sidebar2",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
-
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="Front Office"
-                value={pegawaiNama ?? ""}
-                name="front_office"
-                sx={{
-                  gridColumn: "span 3",
-                  gridArea: "sidebar3",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
 
               <TextField
                 fullWidth
                 variant="standard"
                 type="text"
                 label="ID Booking"
-                value={`${transformedData[0].prefix_reservasi}${id}`}
+                value={`${transformedData[0].prefix_reservasi}`}
                 name="check_in"
                 sx={{
                   gridColumn: "span 3",
@@ -564,13 +618,15 @@ const DetailRiwayatTransaksi = () => {
                                   // If an adjusted tariff is found, render it and stop further iteration
                                   acc = (
                                     <div key={tarif.id}>
-                                      Rp. {adjustedHarga}
+                                      Rp. {adjustedHarga * diffDays}
                                     </div>
                                   );
                                 } else if (!acc) {
                                   // If it's a "normal" tariff and no adjusted tariff has been found, render it
                                   acc = (
-                                    <div key={tarif.id}>Rp. {tarif.harga}</div>
+                                    <div key={tarif.id}>
+                                      Rp. {tarif.harga * diffDays}
+                                    </div>
                                   );
                                 }
                               }
@@ -607,14 +663,20 @@ const DetailRiwayatTransaksi = () => {
                                   // If an adjusted tariff is found, render it and stop further iteration
                                   acc = (
                                     <div key={tarif.id}>
-                                      Rp. {kamar.jumlahKamar * adjustedHarga}
+                                      Rp.{" "}
+                                      {kamar.jumlahKamar *
+                                        adjustedHarga *
+                                        diffDays}
                                     </div>
                                   );
                                 } else if (!acc) {
                                   // If it's a "normal" tariff and no adjusted tariff has been found, render it
                                   acc = (
                                     <div key={tarif.id}>
-                                      Rp. {kamar.jumlahKamar * tarif.harga}
+                                      Rp.{" "}
+                                      {kamar.jumlahKamar *
+                                        tarif.harga *
+                                        diffDays}
                                     </div>
                                   );
                                 }
@@ -746,67 +808,12 @@ const DetailRiwayatTransaksi = () => {
                 fullWidth
                 variant="standard"
                 type="text"
-                label="Tax"
-                value={"Rp." + tax}
-                name="tax"
-                sx={{
-                  gridColumn: "span 1",
-                  gridArea: "sidebar1",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="TOTAL"
-                value={"Rp." + totalValue}
-                name="total"
-                sx={{
-                  gridColumn: "span 2",
-                  gridArea: "sidebar2",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
-
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="Jaminan"
+                label="Total Harga"
                 value={"Rp." + totalKamar}
                 name="jaminan"
                 sx={{
                   gridColumn: "span 3",
                   gridArea: "sidebar4",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
-
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="Deposit"
-                value={"Rp." + deposit}
-                name="deposit"
-                sx={{
-                  gridColumn: "span 3",
-                  gridArea: "sidebar5",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
-
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="Cash"
-                value={"Rp." + cash}
-                name="cash"
-                sx={{
-                  gridColumn: "span 3",
-                  gridArea: "sidebar3",
                 }}
                 InputProps={{ readOnly: true, disableUnderline: true }}
               />
@@ -818,11 +825,34 @@ const DetailRiwayatTransaksi = () => {
         </Box>
 
         <Box sx={{ textAlign: "center", m: 5, fontWeight: "bold" }}>
-          Thank You For Your Visit!
+          Please Check Your Reservasi!
+        </Box>
+        <Box sx={{ textAlign: "center", m: 5, fontWeight: "bold" }}>
+          Nomor Rekening : 770011770022
+        </Box>
+        <Box sx={{ textAlign: "center", m: 5, fontWeight: "bold" }}>
+          Bank Diamond atas nama PT Atma Jaya!
+        </Box>
+        <Box sx={{ textAlign: "center", m: 5, fontWeight: "bold" }}>
+          Layanan akan dibayarkan saat Check Out
+        </Box>
+        <Box sx={{ textAlign: "center", m: 5, fontWeight: "bold" }}>
+          <Button
+            onClick={() => {
+                
+              postDataToAPI(); // Call the postDataToAPI function on button click
+              console.log(postDataToAPI())
+            }}
+            color="primary"
+            variant="contained"
+            sx={{ color: "white" }}
+          >
+            Konfirmasi
+          </Button>
         </Box>
       </form>
     </Box>
   );
 };
 
-export default DetailRiwayatTransaksi;
+export default ResumeReservasi;

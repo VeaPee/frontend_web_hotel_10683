@@ -18,6 +18,7 @@ import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
+import NumbersIcon from '@mui/icons-material/Numbers';
 import jwt_decode from "jwt-decode";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -160,6 +161,14 @@ const Sidebar = () => {
                   selected={selected}
                   setSelected={setSelected}
                 />
+<Item
+                  title="Nomor Kamar"
+                  to="/nomorKamar"
+                  icon={<NumbersIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+
               </>
             )}
 

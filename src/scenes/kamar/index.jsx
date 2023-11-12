@@ -52,11 +52,11 @@ const Kamar = () => {
       headerName: "Fasilitas",
       flex: 1,
     },
-    {
-      field: "nomor_kamar",
-      headerName: "Nomor Kamar",
-      flex: 1,
-    },
+    // {
+    //   field: "nomor_kamar",
+    //   headerName: "Nomor Kamar",
+    //   flex: 1,
+    // },
     {
       field: "update",
       headerName: "",
@@ -117,7 +117,8 @@ const Kamar = () => {
       };
 
       const response = await axios.get(
-        "https://p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar",
+        // "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar",
+        "http://localhost:6000/api/v1/kamar/getAllKamar",
         config
       );
 
@@ -130,7 +131,7 @@ const Kamar = () => {
         kapasitas: item.kapasitas,
         luas: item.luas,
         fasilitas: item.fasilitas,
-        nomor_kamar: item.nomor_kamar,
+        // nomor_kamar: item.nomor_kamar,
       }));
       console.log(transformedData); // Check the transformed data
       setData(transformedData);
@@ -158,7 +159,8 @@ const Kamar = () => {
       };
 
       await axios.delete(
-        `https://p3l-10683.et.r.appspot.com/api/v1/kamar/deleteKamar/${id}`,
+        // `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/deleteKamar/${id}`,
+        `http://localhost:6000/api/v1/kamar/deleteKamar/${id}`,
         config
       );
 
