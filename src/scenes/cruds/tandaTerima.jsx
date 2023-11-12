@@ -133,6 +133,7 @@ const TandaTerima = () => {
                     jaminan: dataNota.jaminan,
                     depositNota: dataNota.deposit,
                     cash: dataNota.no_invoice,
+                    tanggal_pembayaran: dataNota.tanggal_pembayaran
                   })
                 ),
 
@@ -330,42 +331,23 @@ const TandaTerima = () => {
                 }}
                 InputProps={{ readOnly: true, disableUnderline: true }}
               />
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="No. Invoice"
-                value={
-                  transformedData &&
-                  transformedData[0] &&
-                  transformedData[0].NotaPelunasan &&
-                  transformedData[0].NotaPelunasan[0]
-                    ? transformedData[0].NotaPelunasan[0].no_invoice ||
-                    transformedData[0].prefix_reservasi ||
-                      ""
-                    : ""
-                }
-                name="no_invoice"
-                sx={{
-                  gridColumn: "span 2",
-                  gridArea: "sidebar2",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
 
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="Front Office"
-                value={pegawaiNama ?? ""}
-                name="front_office"
-                sx={{
-                  gridColumn: "span 3",
-                  gridArea: "sidebar3",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
+              
+{customerData[0]?.jenis_customer === "Grup" && (
+                <TextField
+                  fullWidth
+                  variant="standard"
+                  type="text"
+                  label="PIC"
+                  value={pegawaiNama ?? ""}
+                  name="pic"
+                  sx={{
+                    gridColumn: "span 3",
+                    gridArea: "sidebar3",
+                  }}
+                  InputProps={{ readOnly: true, disableUnderline: true }}
+                />
+              )}
 
               <TextField
                 fullWidth
@@ -483,6 +465,22 @@ const TandaTerima = () => {
                 label="Jumlah Anak Anak"
                 value={transformedData[0].jumlahAnakAnak}
                 name="jumlahAnakAnak"
+                sx={{ gridColumn: "span 3" }}
+                InputProps={{ readOnly: true, disableUnderline: true }}
+              />
+              <TextField
+                fullWidth
+                variant="standard"
+                type="text"
+                label="Tanggal Pembayaran"
+                value={new Date(
+                    transformedData[0].NotaPelunasan[0].tanggal_pembayaran
+                  ).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                name="tanggal_pembayaran"
                 sx={{ gridColumn: "span 3" }}
                 InputProps={{ readOnly: true, disableUnderline: true }}
               />
@@ -661,18 +659,6 @@ const TandaTerima = () => {
                     <TableCell style={{ border: "1px solid black" }}>
                       Layanan
                     </TableCell>
-                    <TableCell style={{ border: "1px solid black" }}>
-                      Tanggal
-                    </TableCell>
-                    <TableCell style={{ border: "1px solid black" }}>
-                      Jumlah
-                    </TableCell>
-                    <TableCell style={{ border: "1px solid black" }}>
-                      Harga
-                    </TableCell>
-                    <TableCell style={{ border: "1px solid black" }}>
-                      Subtotal
-                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -682,47 +668,9 @@ const TandaTerima = () => {
                         <TableCell style={{ border: "1px solid black" }}>
                           {fasilitas.nama_fasilitas}
                         </TableCell>
-                        <TableCell style={{ border: "1px solid black" }}>
-                          {fasilitas.jenisBed}
-                          {new Date(fasilitas.createdAt).toLocaleDateString(
-                            "en-GB",
-                            {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            }
-                          )}
-                        </TableCell>
-                        <TableCell style={{ border: "1px solid black" }}>
-                          {fasilitas.jumlahFasilitas}
-                        </TableCell>
-                        <TableCell style={{ border: "1px solid black" }}>
-                          {"Rp." + fasilitas.harga}
-                        </TableCell>
-                        <TableCell style={{ border: "1px solid black" }}>
-                          {"Rp." + fasilitas.jumlahFasilitas * fasilitas.harga}
-                        </TableCell>
                       </TableRow>
                     ))
                   )}
-                  <TableRow>
-                    <TableCell
-                      style={{ border: "1px solid black" }}
-                      colSpan={4}
-                      align="center"
-                    ></TableCell>
-                    <TableCell style={{ border: "1px solid black" }}>
-                      {"Rp." +
-                        transformedData
-                          .flatMap((data) => data.fasilitas)
-                          .reduce(
-                            (total, fasilitas) =>
-                              total +
-                              fasilitas.jumlahFasilitas * fasilitas.harga,
-                            0
-                          )}
-                    </TableCell>
-                  </TableRow>
                 </TableBody>
               </Table>
             </div>
@@ -742,32 +690,6 @@ const TandaTerima = () => {
         >
           {!isLoading && transformedData.length > 0 ? (
             <>
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="Tax"
-                value={"Rp." + tax}
-                name="tax"
-                sx={{
-                  gridColumn: "span 1",
-                  gridArea: "sidebar1",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="TOTAL"
-                value={"Rp." + totalValue}
-                name="total"
-                sx={{
-                  gridColumn: "span 2",
-                  gridArea: "sidebar2",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
 
               <TextField
                 fullWidth
@@ -783,33 +705,7 @@ const TandaTerima = () => {
                 InputProps={{ readOnly: true, disableUnderline: true }}
               />
 
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="Deposit"
-                value={"Rp." + deposit}
-                name="deposit"
-                sx={{
-                  gridColumn: "span 3",
-                  gridArea: "sidebar5",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
 
-              <TextField
-                fullWidth
-                variant="standard"
-                type="text"
-                label="Cash"
-                value={"Rp." + cash}
-                name="cash"
-                sx={{
-                  gridColumn: "span 3",
-                  gridArea: "sidebar3",
-                }}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-              />
             </>
           ) : (
             // Loading
