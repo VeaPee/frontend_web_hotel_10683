@@ -603,8 +603,8 @@ const checkoutSchema = yup.object().shape({
   tanggalAkhir: yup.string().required("Tanggal is required"),
 });
 const initialValues = {
-  tanggalAwal: "2023-12-23",
-  tanggalAkhir: "2023-12-24",
+  tanggalAwal: "2023-12-25",
+  tanggalAkhir: "2023-12-26",
   jumlahDewasa: 0,
   jumlahAnakAnak: 0
 };

@@ -294,6 +294,7 @@ const DetailRiwayatTransaksi = () => {
                 "sidebar6 footer footer sidebar3"`,
           }}
         >
+
           {!isLoading ? (
             <>
               {transformedData.length > 0 ? (

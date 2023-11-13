@@ -69,22 +69,85 @@ const RiwayatTransaksi = () => {
       field: "detail",
       headerName: "",
       sortable: false,
-      renderCell: (params) => (
-        <Link to={`/detailriwayat/${params.row.id}`}>
-          <IconButton
-            variant="contained"
-            color="primary"
-            sx={{
-              backgroundColor: colors.greenAccent[500],
-              color: "white",
-              borderRadius: 0,
-            }}
-            onClick={() => handleDetail(params.row.id)}
-          >
-            Detail
-          </IconButton>
-        </Link>
-      ),
+      renderCell: (params) => {
+        const { id, status, jenis_customer } = params.row;
+
+        if (status === "Belum Dibayar") {
+          if (jenis_customer === "Personal") {
+            return (
+              <Link to={`/konfirmasiPembayaran/${id}`}>
+                <IconButton
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    backgroundColor: colors.greenAccent[500],
+                    color: "white",
+                    borderRadius: 0,
+                  }}
+                  onClick={() => handleDetail(id)}
+                >
+                  Bayar
+                </IconButton>
+              </Link>
+            );
+          } else if (jenis_customer === "Grup") {
+            return (
+              <Link to={`/konfirmasiPembayaranGrup/${id}`}>
+                <IconButton
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    backgroundColor: colors.greenAccent[500],
+                    color: "white",
+                    borderRadius: 0,
+                  }}
+                  onClick={() => handleDetail(id)}
+                >
+                  Bayar
+                </IconButton>
+              </Link>
+            );
+          }
+        } else if (status === "Sudah Dibayar") {
+          return (
+            <Link to={`/tandaTerima/${id}`}>
+              <IconButton
+                variant="contained"
+                color="primary"
+                sx={{
+                  backgroundColor: colors.greenAccent[500],
+                  color: "white",
+                  borderRadius: 0,
+                }}
+                onClick={() => handleDetail(id)}
+              >
+                Tanda Terima
+              </IconButton>
+            </Link>
+          );
+        } else if (status === "Dibatalkan") {
+          // If status is "Dibatalkan", don't show anything
+          return null;
+        }
+
+        // Default: Render the "Detail" button
+        return (
+          <Link to={`/detailriwayat/${id}`}>
+            <IconButton
+              variant="contained"
+              color="primary"
+              sx={{
+                backgroundColor: colors.greenAccent[500],
+                color: "white",
+                borderRadius: 0,
+              }}
+              onClick={() => handleDetail(id)}
+            >
+              Detail
+            </IconButton>
+          </Link>
+        );
+      },
     },
     {
       field: "update",
@@ -156,7 +219,7 @@ const RiwayatTransaksi = () => {
         status: item.status,
         prefix_reservasi: item.prefix_reservasi,
         nama_customer: item.Customer.nama_customer,
-        jenis_customer: item.Customer.jenis_customer
+        jenis_customer: item.Customer.jenis_customer,
       }));
       console.log(transformedData); // Check the transformed data
       setData(transformedData);
@@ -212,12 +275,6 @@ const RiwayatTransaksi = () => {
       (transaction) => transaction.id === id
     );
 
-    // Check if the status is "Belum Dibayar"
-    if (selectedTransaction.status === "Belum Dibayar") {
-      // Handle the case where status is "Belum Dibayar" (you may want to show a different message or take other actions)
-      return;
-    }
-
     // Convert check_in string to a Date object
     const checkInDate = new Date(selectedTransaction.check_in);
 
@@ -236,6 +293,12 @@ const RiwayatTransaksi = () => {
       cancellationMessage = "Uang Anda Akan Dikembalikan";
     } else {
       cancellationMessage = "Uang Anda Tidak Dapat Dikembalikan";
+    }
+
+    // Check if the status is "Belum Dibayar"
+    if (selectedTransaction.status === "Belum Dibayar") {
+      // Handle the case where status is "Belum Dibayar" (you may want to show a different message or take other actions)
+      cancellationMessage = "...";
     }
 
     setSelectedRowId(id);

@@ -839,9 +839,7 @@ const ResumeReservasi = () => {
         <Box sx={{ textAlign: "center", m: 5, fontWeight: "bold" }}>
           <Button
             onClick={() => {
-                
               postDataToAPI(); // Call the postDataToAPI function on button click
-              console.log(postDataToAPI())
             }}
             color="primary"
             variant="contained"
