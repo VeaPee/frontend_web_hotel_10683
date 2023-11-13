@@ -219,14 +219,14 @@ const Sidebar = () => {
                 >
                   Transaksi
                 </Typography>
-
+{/* 
                 <Item
                   title="Pesan Kamar"
                   to="/kamaravailabilitysm"
                   icon={<BedroomParentOutlinedIcon />}
                   selected={selected}
                   setSelected={setSelected}
-                />
+                /> */}
               </>
             )}
             {/* CUSTOMER MENU */}

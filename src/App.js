@@ -14,16 +14,26 @@ import Kamar from "./scenes/kamar";
 import KamarCreate from "./scenes/cruds/kamarCreate";
 import KamarUpdate from "./scenes/cruds/kamarUpdate";
 import KamarAvailability from "./scenes/cruds/kamarAvailability";
+import KamarAvailabilityGrup from "./scenes/cruds/kamarAvailabilityGrup";
 
 import NomorKamar from "./scenes/nomorKamar";
 import NomorKamarCreate from "./scenes/cruds/nomorKamarCreate";
 import NomorKamarUpdate from "./scenes/cruds/nomorKamarUpdate";
 
 import DetailKamarPage from "./scenes/cruds/kamarDetail"
+
 import PemesananKamarPage from "./scenes/cruds/pemesananKamar"
+import PemesananKamarPageGrup from "./scenes/cruds/pemesananKamarGrup"
+
 import PemesananFasilitasPage from "./scenes/cruds/pemesananFasilitas"
+import PemesananFasilitasPageGrup from "./scenes/cruds/pemesananFasilitasGrup"
+
 import ResumeReservasi from "./scenes/cruds/resumeReservasi"
+import ResumeReservasiGrup from "./scenes/cruds/resumeReservasiGrup"
+
 import KonfirmasiPembayaran from "./scenes/cruds/konfirmasiPembayaran"
+import KonfirmasiPembayaranGrup from "./scenes/cruds/konfirmasiPembayaranGroup"
+
 import TandaTerima from "./scenes/cruds/tandaTerima"
 
 import Customer from "./scenes/customer";
@@ -52,6 +62,7 @@ import { Routes, Route } from "react-router-dom";
 import Topbar from "./scenes/global/Topbar";
 import Dashboard from "./scenes/dashboard";
 import Sidebar from "./scenes/global/Sidebar";
+// import PemesananFasilitasPageGrup from "./scenes/cruds/pemesananFasilitasGrup";
 // import Invoices from "./scenes/invoices";
 // import Form from "./scenes/form";
 
@@ -95,11 +106,22 @@ function App() {
                 <Route path="/nomorkamarUpdate/:id" element={<NomorKamarUpdate />} />
 
                 <Route path="/KamarAvailability" element={<KamarAvailability />} />
+                <Route path="/KamarAvailabilityGrup/:id" element={<KamarAvailabilityGrup />} />
+
                 <Route path="/DetailKamarPage/:id" element={<DetailKamarPage />} />
+
                 <Route path="/pemesananKamar" element={<PemesananKamarPage/>} />
+                <Route path="/pemesananKamarGrup" element={<PemesananKamarPageGrup/>} />
+
                 <Route path="/pemesananFasilitas" element={<PemesananFasilitasPage/>} />
+                <Route path="/pemesananFasilitasGrup" element={<PemesananFasilitasPageGrup/>} />
+
                 <Route path="/resumeReservasi/:id" element={<ResumeReservasi/>} />
+                <Route path="/resumeReservasiGrup/:id" element={<ResumeReservasiGrup/>} />
+
                 <Route path="/konfirmasiPembayaran/:id" element={<KonfirmasiPembayaran/>} />
+                <Route path="/konfirmasiPembayaranGrup/:id" element={<KonfirmasiPembayaranGrup/>} />
+
                 <Route path="/tandaTerima/:id" element={<TandaTerima/>} />
                 
                 <Route path="/season" element={<Season />} />

@@ -48,25 +48,26 @@ const Customer = () => {
       headerName: "alamat",
       flex: 1,
     },
-    // {
-    //   field: "update",
-    //   headerName: "",
-    //   sortable: false,
-    //   renderCell: (params) => (
-    //     <IconButton
-    //       variant="contained"
-    //       color="primary"
-    //       sx={{
-    //         backgroundColor: colors.greenAccent[500],
-    //         color: "white",
-    //         borderRadius: 0,
-    //       }}
-    //       onClick={() => handleUpdate(params.row.id)}
-    //     >
-    //       Update
-    //     </IconButton>
-    //   ),
-    // },
+    {
+      field: "pesan",
+      headerName: "",
+      flex: 1,
+      sortable: false,
+      renderCell: (params) => (
+        <IconButton
+          variant="contained"
+          color="primary"
+          sx={{
+            backgroundColor: colors.greenAccent[500],
+            color: "white",
+            borderRadius: 0,
+          }}
+          onClick={() => handlePesan(params.row.id)}
+        >
+          Reservasi
+        </IconButton>
+      ),
+    },
   ];
 
   const [data, setData] = useState([]);
@@ -125,9 +126,9 @@ const Customer = () => {
     }
   }, [token]);
 
-  // const handleUpdate = (id) => {
-  //   navigate(`/customerupdate/${id}`);
-  // };
+  const handlePesan = (id) => {
+    navigate(`/KamarAvailabilityGrup/${id}`);
+  };
 
   const handleSearch = (e) => {
     const query = e.target.value;

@@ -133,7 +133,7 @@ const TandaTerima = () => {
                     jaminan: dataNota.jaminan,
                     depositNota: dataNota.deposit,
                     cash: dataNota.no_invoice,
-                    tanggal_pembayaran: dataNota.tanggal_pembayaran
+                    tanggal_pembayaran: dataNota.tanggal_pembayaran,
                   })
                 ),
 
@@ -332,8 +332,7 @@ const TandaTerima = () => {
                 InputProps={{ readOnly: true, disableUnderline: true }}
               />
 
-              
-{customerData[0]?.jenis_customer === "Grup" && (
+              {customerData[0]?.jenis_customer === "Grup" && (
                 <TextField
                   fullWidth
                   variant="standard"
@@ -474,12 +473,12 @@ const TandaTerima = () => {
                 type="text"
                 label="Tanggal Pembayaran"
                 value={new Date(
-                    transformedData[0].NotaPelunasan[0].tanggal_pembayaran
-                  ).toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
+                  transformedData[0].NotaPelunasan[0].tanggal_pembayaran
+                ).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
                 name="tanggal_pembayaran"
                 sx={{ gridColumn: "span 3" }}
                 InputProps={{ readOnly: true, disableUnderline: true }}
@@ -603,6 +602,7 @@ const TandaTerima = () => {
                                     calculateAdjustedHarga(tarif);
 
                                   // If an adjusted tariff is found, render it and stop further iteration
+
                                   acc = (
                                     <div key={tarif.id}>
                                       Rp. {kamar.jumlahKamar * adjustedHarga}
@@ -688,9 +688,29 @@ const TandaTerima = () => {
                 "sidebar6 footer footer sidebar3"`,
           }}
         >
-          {!isLoading && transformedData.length > 0 ? (
+          {!isLoading &&
+          transformedData.length > 0 &&
+          transformedData[0].prefix_reservasi &&
+          transformedData[0].prefix_reservasi[0].charAt(0) === "G" ? (
+            // Render TextField if the first letter is 'G'
             <>
-
+              <TextField
+                fullWidth
+                variant="standard"
+                type="text"
+                label="Jaminan"
+                value={"Rp." + totalKamar * 0.5}
+                name="jaminan"
+                sx={{
+                  gridColumn: "span 3",
+                  gridArea: "sidebar4",
+                }}
+                InputProps={{ readOnly: true, disableUnderline: true }}
+              />
+            </>
+          ) : !isLoading && transformedData.length > 0 ? (
+            // Render a different TextField if the first letter is not 'G'
+            <>
               <TextField
                 fullWidth
                 variant="standard"
@@ -704,11 +724,9 @@ const TandaTerima = () => {
                 }}
                 InputProps={{ readOnly: true, disableUnderline: true }}
               />
-
-
             </>
           ) : (
-            // Loading
+            // Loading or any other fallback
             <p></p>
           )}
         </Box>

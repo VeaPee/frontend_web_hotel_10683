@@ -306,7 +306,7 @@ const ResumeReservasi = () => {
         {
           tax: tax,
           subtotal: totalValue,
-          jaminan: totalKamar,
+          jaminan: (totalKamar * 0.5),
           cash: cash,
           deposit: deposit,
         },
@@ -315,7 +315,7 @@ const ResumeReservasi = () => {
 
       console.log(response.data);
 
-      navigate(`/konfirmasiPembayaran/${reservasiId}`, {
+      navigate(`/konfirmasiPembayaranGrup/${reservasiId}`, {
         state: {
           cart,
           tanggalAwal,
@@ -809,7 +809,7 @@ const ResumeReservasi = () => {
                 variant="standard"
                 type="text"
                 label="Uang Jaminan"
-                value={"Rp." + totalKamar}
+                value={"Rp." + (totalKamar*0.5)}
                 name="jaminan"
                 sx={{
                   gridColumn: "span 3",
