@@ -83,7 +83,8 @@ const KamarAvailabilityGrup = () => {
 
     axios
       .post(
-        "http://localhost:6000/api/v1/kamar/checkKamarAvailability",
+        // "http://localhost:6000/api/v1/kamar/checkKamarAvailability",
+        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/checkKamarAvailability",
         {
           tanggalAwal: values.tanggalAwal,
           tanggalAkhir: values.tanggalAkhir,

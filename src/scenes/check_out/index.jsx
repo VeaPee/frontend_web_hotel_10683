@@ -23,7 +23,7 @@ import Header from "../../components/Header";
 import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
 
-const KonfirmasiPembayaranGrup = () => {
+const CheckOut = () => {
   // Static Nomor Rekening
   const navigate = useNavigate();
   const nomorRekening = "770011770022";
@@ -41,6 +41,8 @@ const KonfirmasiPembayaranGrup = () => {
 
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
 
+  const [inputUang, setInputUang] = useState("");
+
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -56,7 +58,7 @@ const KonfirmasiPembayaranGrup = () => {
     console.log("Request Headers:", config.headers);
     try {
       const response = await axios.put(
-        `http://localhost:6000/api/v1/transaksi/konfirmasiPembayaran/${id}`,
+        `http://localhost:6000/api/v1/transaksi/checkOut/${id}`,
         null,
         config
       );
@@ -70,7 +72,7 @@ const KonfirmasiPembayaranGrup = () => {
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
         setProofOfPayment(null);
-        navigate(`/tandaTerima/${id}`);
+        navigate(`/detailriwayat/${id}`);
         // navigate("/");
       }
     } catch (error) {
@@ -127,9 +129,14 @@ const KonfirmasiPembayaranGrup = () => {
                     subtotal: dataNota.subtotal,
                     jaminan: dataNota.jaminan,
                     depositNota: dataNota.deposit,
-                    cash: dataNota.no_invoice,
+                    cash: dataNota.cash,
                   })
                 ),
+
+                Customer: {
+                  id: response.data.data.Customer.id,
+                  nama_customer: response.data.data.Customer.nama_customer,
+                },
               },
             ]
           : [];
@@ -144,17 +151,64 @@ const KonfirmasiPembayaranGrup = () => {
     }
   };
 
+  //   const handleOpenConfirmationDialog = () => {
+  //     setConfirmationDialogOpen(true);
+  //   };
   const handleOpenConfirmationDialog = () => {
-    setConfirmationDialogOpen(true);
+    if (transformedData[0].NotaPelunasan[0].cash < 0) {
+      setConfirmationDialogOpen(true);
+    } else {
+      // Check if the input value matches the cash amount
+      const cashAmount =
+        transformedData.length > 0
+          ? transformedData[0].NotaPelunasan[0].cash
+          : 0;
+      const inputUangValue = parseFloat(inputUang) || 0;
+
+      if (inputUangValue !== cashAmount) {
+        setSnackbarMessage("Input Uang harus sama dengan Cash.");
+        setSnackbarSeverity("warning");
+        setSnackbarOpen(true);
+      } else {
+        setConfirmationDialogOpen(true);
+      }
+    }
   };
 
   const handleCloseConfirmationDialog = () => {
     setConfirmationDialogOpen(false);
   };
 
+  //   const handleConfirmPayment = () => {
+  //     handleCloseConfirmationDialog();
+  //     handleSubmit(token);
+  //   };
+
   const handleConfirmPayment = () => {
     handleCloseConfirmationDialog();
-    handleSubmit(token);
+
+    if (transformedData[0].NotaPelunasan[0].cash < 0) {
+      handleSubmit(token);
+    } else {
+      // Check if the input value still matches the cash amount
+      const cashAmount =
+        transformedData.length > 0
+          ? transformedData[0].NotaPelunasan[0].cash
+          : 0;
+      const inputUangValue = parseFloat(inputUang) || 0;
+
+      if (inputUangValue !== cashAmount) {
+        setSnackbarMessage(
+          "Input Uang Tidak Sama dengan Cash. Konfirmasi Gagal."
+        );
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        return;
+      }
+
+      // Continue with the payment confirmation logic
+      handleSubmit(token);
+    }
   };
 
   const getCurrentUserToken = () => {
@@ -174,7 +228,7 @@ const KonfirmasiPembayaranGrup = () => {
 
   return (
     <Box m="20px">
-      <Header title="Konfirmasi Pembayaran" subtitle="Cepatlah Bayar" />
+      <Header title="Check Out" subtitle="Mengonfirmasi Check Out Customer" />
 
       <Snackbar
         open={snackbarOpen}
@@ -195,7 +249,9 @@ const KonfirmasiPembayaranGrup = () => {
       >
         <DialogTitle>Confirm Payment</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to confirm the payment?</Typography>
+          <Typography>
+            Are you sure you want to confirm the Check Out?
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseConfirmationDialog} color="primary">
@@ -217,34 +273,79 @@ const KonfirmasiPembayaranGrup = () => {
         <Card>
           <CardContent>
             <Typography variant="h5" mb={2}>
-              Pembayaran
+              Check Out
             </Typography>
 
             <Card sx={{ mb: 2 }}>
               <CardContent>
                 <Typography variant="h6" mb={2}>
-                  Nomor Rekening
+                  Nama Customer
                 </Typography>
-                <Typography variant="body1">{nomorRekening}</Typography>
-                <Typography variant="h6" mb={2}>
-                  Bank Diamond atas nama PT Atma Jaya
+                <Typography variant="h4">
+                  {transformedData.length > 0
+                    ? transformedData[0].Customer.nama_customer
+                    : "Customer information not available"}
                 </Typography>
               </CardContent>
             </Card>
+            <Card sx={{ mb: 2 }}>
+              <CardContent>
+                <Typography variant="h6" mb={2}>
+                  ID Transaksi
+                </Typography>
+                <Typography variant="h4">
+                  {transformedData.length > 0
+                    ? transformedData[0].prefix_reservasi
+                    : "Information not available"}
+                </Typography>
+              </CardContent>
+            </Card>
+
             {!isLoading && transformedData.length > 0 ? (
               <>
                 <Card sx={{ mb: 2 }}>
                   <CardContent>
                     <Typography variant="h6" mb={2} textAlign="center">
-                      Jumlah yang perlu dibayarkan
+                      Jumlah Cash (Minus Artinya Kembalian)
                     </Typography>
                     <Typography
                       variant="h3"
                       textAlign="center"
                       fontWeight="bold"
                     >
-                      Rp. {transformedData[0].NotaPelunasan[0].jaminan}
+                      {transformedData.length > 0
+                        ? transformedData[0].NotaPelunasan[0].cash
+                        : "Information not available"}
                     </Typography>
+                  </CardContent>
+                </Card>
+              </>
+            ) : (
+              <p>...</p>
+            )}
+
+            {!isLoading &&
+            transformedData.length > 0 &&
+            transformedData[0].NotaPelunasan[0].cash >= 0 ? (
+              <>
+                <Card sx={{ mb: 2 }}>
+                  <CardContent>
+                    <Typography variant="h6" mb={2} textAlign="center">
+                      Inputkan Uang sesuai dengan Jumlah Cash!
+                    </Typography>
+                    <TextField
+                      label="Input Uang"
+                      variant="outlined"
+                      fullWidth
+                      type="number"
+                      value={inputUang}
+                      onChange={(e) => setInputUang(e.target.value)}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">Rp</InputAdornment>
+                        ),
+                      }}
+                    />
                   </CardContent>
                 </Card>
               </>
@@ -267,4 +368,4 @@ const KonfirmasiPembayaranGrup = () => {
   );
 };
 
-export default KonfirmasiPembayaranGrup;
+export default CheckOut;

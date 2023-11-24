@@ -54,6 +54,11 @@ import FasilitasUpdate from "./scenes/cruds/fasilitasUpdate";
 
 import RiwayatTransaksi from "./scenes/cruds/readRiwayatTransaksi";
 import DetailRiwayatTransaksi from "./scenes/cruds/readDetailRiwayatTransaksi";
+import ListRiwayatTransaksi from "./scenes/front_office";
+
+import CheckIn from "./scenes/check_in";
+import CheckOut from "./scenes/check_out";
+import TambahinFasilitas from "./scenes/cruds/tambahinFasilitas";
 
 import { useState } from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -138,9 +143,13 @@ function App() {
 
                 <Route path="/riwayattransaksi" element={<RiwayatTransaksi />} />
                 <Route path="/detailriwayat/:id" element={<DetailRiwayatTransaksi />} />
+                <Route path="/listreservasi" element={<ListRiwayatTransaksi />} />
 
+                <Route path="/CheckIn/:id" element={<CheckIn />} />
+                <Route path="/CheckOut/:id" element={<CheckOut />} />
+                <Route path="/tambahinFasilitas/:id" element={<TambahinFasilitas />} />
                 
-                
+
               </Routes>
             </Box>
           </main>

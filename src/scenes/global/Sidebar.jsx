@@ -18,7 +18,8 @@ import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
-import NumbersIcon from '@mui/icons-material/Numbers';
+import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
+import NumbersIcon from "@mui/icons-material/Numbers";
 import jwt_decode from "jwt-decode";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -161,14 +162,13 @@ const Sidebar = () => {
                   selected={selected}
                   setSelected={setSelected}
                 />
-<Item
+                <Item
                   title="Nomor Kamar"
                   to="/nomorKamar"
                   icon={<NumbersIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />
-
               </>
             )}
 
@@ -219,7 +219,7 @@ const Sidebar = () => {
                 >
                   Transaksi
                 </Typography>
-{/* 
+                {/* 
                 <Item
                   title="Pesan Kamar"
                   to="/kamaravailabilitysm"
@@ -230,26 +230,46 @@ const Sidebar = () => {
               </>
             )}
             {/* CUSTOMER MENU */}
-            {isLoggedIn &&
-              (userRole === 6) && (
-                <>
-                  <Typography
-                    variant="h6"
-                    color={colors.grey[300]}
-                    sx={{ m: "15px 0 5px 20px" }}
-                  >
-                    Transaksi
-                  </Typography>
+            {isLoggedIn && userRole === 6 && (
+              <>
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
+                >
+                  Transaksi
+                </Typography>
 
-                  <Item
-                    title="Pesan Kamar"
-                    to="/kamaravailability"
-                    icon={<BedroomParentOutlinedIcon />}
-                    selected={selected}
-                    setSelected={setSelected}
-                  />
-                </>
-              )}
+                <Item
+                  title="Pesan Kamar"
+                  to="/kamaravailability"
+                  icon={<BedroomParentOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </>
+            )}
+
+            {/* FO MENU */}
+            {isLoggedIn && userRole === 3 && (
+              <>
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
+                >
+                  Check
+                </Typography>
+
+                <Item
+                  title="Check Customer"
+                  to="/listreservasi"
+                  icon={<FactCheckOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </>
+            )}
             {/* SM & CUSTOMER MENU */}
             {isLoggedIn && (userRole === 2 || userRole === 6) && (
               <>

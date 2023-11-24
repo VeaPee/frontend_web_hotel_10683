@@ -23,7 +23,7 @@ import Header from "../../components/Header";
 import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
 
-const KonfirmasiPembayaranGrup = () => {
+const CheckIn = () => {
   // Static Nomor Rekening
   const navigate = useNavigate();
   const nomorRekening = "770011770022";
@@ -56,7 +56,7 @@ const KonfirmasiPembayaranGrup = () => {
     console.log("Request Headers:", config.headers);
     try {
       const response = await axios.put(
-        `http://localhost:6000/api/v1/transaksi/konfirmasiPembayaran/${id}`,
+        `http://localhost:6000/api/v1/transaksi/checkIn/${id}`,
         null,
         config
       );
@@ -70,7 +70,7 @@ const KonfirmasiPembayaranGrup = () => {
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
         setProofOfPayment(null);
-        navigate(`/tandaTerima/${id}`);
+        navigate(`/listreservasi`);
         // navigate("/");
       }
     } catch (error) {
@@ -130,6 +130,11 @@ const KonfirmasiPembayaranGrup = () => {
                     cash: dataNota.no_invoice,
                   })
                 ),
+
+                Customer: {
+                  id: response.data.data.Customer.id,
+                  nama_customer: response.data.data.Customer.nama_customer,
+                },
               },
             ]
           : [];
@@ -174,7 +179,7 @@ const KonfirmasiPembayaranGrup = () => {
 
   return (
     <Box m="20px">
-      <Header title="Konfirmasi Pembayaran" subtitle="Cepatlah Bayar" />
+      <Header title="Check In" subtitle="Mengonfirmasi Check In Customer" />
 
       <Snackbar
         open={snackbarOpen}
@@ -195,7 +200,9 @@ const KonfirmasiPembayaranGrup = () => {
       >
         <DialogTitle>Confirm Payment</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to confirm the payment?</Typography>
+          <Typography>
+            Are you sure you want to confirm the Check In?
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseConfirmationDialog} color="primary">
@@ -217,33 +224,47 @@ const KonfirmasiPembayaranGrup = () => {
         <Card>
           <CardContent>
             <Typography variant="h5" mb={2}>
-              Pembayaran
+              Check In
             </Typography>
 
             <Card sx={{ mb: 2 }}>
               <CardContent>
                 <Typography variant="h6" mb={2}>
-                  Nomor Rekening
+                  Nama Customer
                 </Typography>
-                <Typography variant="body1">{nomorRekening}</Typography>
-                <Typography variant="h6" mb={2}>
-                  Bank Diamond atas nama PT Atma Jaya
+                <Typography variant="h4">
+                  {transformedData.length > 0
+                    ? transformedData[0].Customer.nama_customer
+                    : "Customer information not available"}
                 </Typography>
               </CardContent>
             </Card>
+            <Card sx={{ mb: 2 }}>
+              <CardContent>
+                <Typography variant="h6" mb={2}>
+                  ID Transaksi
+                </Typography>
+                <Typography variant="h4">
+                  {transformedData.length > 0
+                    ? transformedData[0].prefix_reservasi
+                    : "Information not available"}
+                </Typography>
+              </CardContent>
+            </Card>
+
             {!isLoading && transformedData.length > 0 ? (
               <>
                 <Card sx={{ mb: 2 }}>
                   <CardContent>
                     <Typography variant="h6" mb={2} textAlign="center">
-                      Jumlah yang perlu dibayarkan
+                      Jumlah Deposit yang perlu dibayarkan
                     </Typography>
                     <Typography
                       variant="h3"
                       textAlign="center"
                       fontWeight="bold"
                     >
-                      Rp. {transformedData[0].NotaPelunasan[0].jaminan}
+                      Rp. 300.000
                     </Typography>
                   </CardContent>
                 </Card>
@@ -267,4 +288,4 @@ const KonfirmasiPembayaranGrup = () => {
   );
 };
 
-export default KonfirmasiPembayaranGrup;
+export default CheckIn;

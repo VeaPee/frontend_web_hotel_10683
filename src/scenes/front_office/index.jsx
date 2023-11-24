@@ -18,7 +18,7 @@ import Header from "../../components/Header";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-const RiwayatTransaksi = () => {
+const ListRiwayatTransaksi = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
@@ -68,49 +68,14 @@ const RiwayatTransaksi = () => {
     {
       field: "detail",
       headerName: "",
+      flex: 1,
       sortable: false,
       renderCell: (params) => {
-        const { id, status, jenis_customer } = params.row;
+        const { id, status } = params.row;
 
-        if (status === "Belum Dibayar") {
-          if (jenis_customer === "Personal") {
-            return (
-              <Link to={`/konfirmasiPembayaran/${id}`}>
-                <IconButton
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    backgroundColor: colors.greenAccent[500],
-                    color: "white",
-                    borderRadius: 0,
-                  }}
-                  onClick={() => handleDetail(id)}
-                >
-                  Bayar
-                </IconButton>
-              </Link>
-            );
-          } else if (jenis_customer === "Grup") {
-            return (
-              <Link to={`/konfirmasiPembayaranGrup/${id}`}>
-                <IconButton
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    backgroundColor: colors.greenAccent[500],
-                    color: "white",
-                    borderRadius: 0,
-                  }}
-                  onClick={() => handleDetail(id)}
-                >
-                  Bayar
-                </IconButton>
-              </Link>
-            );
-          }
-        } else if (status === "Sudah Dibayar") {
+        if (status === "Sudah Dibayar") {
           return (
-            <Link to={`/tandaTerima/${id}`}>
+            <Link to={`/CheckIn/${id}`}>
               <IconButton
                 variant="contained"
                 color="primary"
@@ -121,59 +86,79 @@ const RiwayatTransaksi = () => {
                 }}
                 onClick={() => handleDetail(id)}
               >
-                Tanda Terima
+                Check In
               </IconButton>
             </Link>
           );
-        } else if (status === "Dibatalkan") {
-          // If status is "Dibatalkan", don't show anything
+        } else if (status === "Sudah Check In") {
+          return (
+            <Link to={`/CheckOut/${id}`}>
+              <IconButton
+                variant="contained"
+                color="primary"
+                sx={{
+                  backgroundColor: colors.greenAccent[500],
+                  color: "white",
+                  borderRadius: 0,
+                }}
+                onClick={() => handleDetail(id)}
+              >
+                Check Out
+              </IconButton>
+            </Link>
+          );
+        } else if (status === "Sudah Check Out") {
+          return (
+            <Link to={`/detailriwayat/${id}`}>
+              <IconButton
+                variant="contained"
+                color="primary"
+                sx={{
+                  backgroundColor: colors.greenAccent[500],
+                  color: "white",
+                  borderRadius: 0,
+                }}
+                onClick={() => handleDetail(id)}
+              >
+                Nota
+              </IconButton>
+            </Link>
+          );
+        } else {
           return null;
         }
-
-        // Default: Render the "Detail" button
-        return (
-          <Link to={`/detailriwayat/${id}`}>
-            <IconButton
-              variant="contained"
-              color="primary"
-              sx={{
-                backgroundColor: colors.greenAccent[500],
-                color: "white",
-                borderRadius: 0,
-              }}
-              onClick={() => handleDetail(id)}
-            >
-              Detail
-            </IconButton>
-          </Link>
-        );
       },
     },
     {
-      field: "update",
-      headerName: "",
-      sortable: false,
-      renderCell: (params) => {
-        const isBatalkanVisible =
-          params.row.status === "Belum Dibayar" ||
-          params.row.status === "Sudah Dibayar";
-
-        return isBatalkanVisible ? (
-          <IconButton
-            variant="contained"
-            color="secondary"
-            sx={{
-              backgroundColor: colors.redAccent[500],
-              color: "white",
-              borderRadius: 0,
-            }}
-            onClick={() => handleBatalkan(params.row.id)}
-          >
-            Batalkan
-          </IconButton>
-        ) : null;
+        field: "fasilitas",
+        headerName: "",
+        flex: 1,
+        sortable: false,
+        renderCell: (params) => {
+          const { id, status } = params.row;
+  
+          if (status === "Sudah Check In") {
+            return (
+              <Link to={`/tambahinFasilitas/${id}`}>
+                <IconButton
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    backgroundColor: colors.greenAccent[500],
+                    color: "white",
+                    borderRadius: 0,
+                  }}
+                  onClick={() => handleDetail(id)}
+                >
+                  Fasilitas
+                </IconButton>
+              </Link>
+            );
+          }else {
+            return null;
+          }
+        },
       },
-    },
   ];
 
   const [data, setData] = useState([]);
@@ -183,13 +168,10 @@ const RiwayatTransaksi = () => {
   const [customerSearchTerm, setCustomerSearchTerm] = useState("");
   const [reservasiSearchTerm, setReservasiSearchTerm] = useState("");
 
-  const [batalDialogOpen, setBatalDialogOpen] = useState(false);
-  const [selectedRowId, setSelectedRowId] = useState(null);
-
-  const [cancellationMessage, setCancellationMessage] = useState("");
-
   const fetchData = async (status, customerSearchTerm, reservasiSearchTerm) => {
     try {
+      const currentDate = new Date().toISOString().split("T")[0];
+      console.log(currentDate);
       const config = {
         headers: {
           Authorization: token,
@@ -198,6 +180,7 @@ const RiwayatTransaksi = () => {
           status: status === "All" ? undefined : status,
           nama_customer: customerSearchTerm || undefined,
           prefix_reservasi: reservasiSearchTerm || undefined,
+          check_in: currentDate,
         },
       };
 
@@ -228,92 +211,14 @@ const RiwayatTransaksi = () => {
     }
   };
 
-  const handleConfirmBatal = async (id) => {
-    try {
-      console.log("Request Payload:", {
-        method: "PUT",
-        url: `http://localhost:6000/api/v1/transaksi/pembatalanReservasi/${id}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      console.log("config:", config);
-
-      const response = await axios.put(
-        `http://localhost:6000/api/v1/transaksi/pembatalanReservasi/${id}`,
-        {
-          status: "Dibatalkan",
-        },
-        config
-      );
-
-      // Refresh the page after successful deletion
-      console.log(response);
-      fetchData(token);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const handleDetail = (id) => {
     navigate(`/detailriwayat/${id}`);
   };
 
   const handleStatusChange = (event, newValue) => {
-    // If "Bisa Dibatalkan" is selected, treat it as a combination of "Belum Dibayar" and "Sudah Dibayar"
-    if (newValue === "Bisa Dibatalkan") {
-      fetchData(
-        "Belum Dibayar || Sudah Dibayar",
-        customerSearchTerm,
-        reservasiSearchTerm
-      );
-    } else {
-      fetchData(newValue, customerSearchTerm, reservasiSearchTerm);
-    }
+    fetchData(newValue, customerSearchTerm, reservasiSearchTerm);
 
     setSelectedStatus(newValue);
-  };
-
-  const handleBatalkan = (id) => {
-    const selectedTransaction = data.find(
-      (transaction) => transaction.id === id
-    );
-
-    // Convert check_in string to a Date object
-    const checkInDate = new Date(selectedTransaction.check_in);
-
-    // Get today's date
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for accurate comparison
-
-    // Calculate the day difference
-    const dayDifference = Math.floor(
-      (checkInDate - today) / (1000 * 60 * 60 * 24)
-    );
-
-    let cancellationMessage = "";
-
-    if (dayDifference > 7) {
-      cancellationMessage = "Uang Anda Akan Dikembalikan";
-    } else {
-      cancellationMessage = "Uang Anda Tidak Dapat Dikembalikan";
-    }
-
-    // Check if the status is "Belum Dibayar"
-    if (selectedTransaction.status === "Belum Dibayar") {
-      // Handle the case where status is "Belum Dibayar" (you may want to show a different message or take other actions)
-      cancellationMessage = "...";
-    }
-
-    setSelectedRowId(id);
-    setBatalDialogOpen(true);
-    setCancellationMessage(cancellationMessage);
   };
 
   const getCurrentUserToken = () => {
@@ -337,10 +242,7 @@ const RiwayatTransaksi = () => {
 
   return (
     <Box m="20px">
-      <Header
-        title="Riwayat Transaksi"
-        subtitle="Melihat Riwayat Transaksi Anda"
-      />
+      <Header title="List Reservasi" subtitle="Melihat List Data Reservasi" />
 
       <TextField
         label="Search Nama Customer"
@@ -368,10 +270,11 @@ const RiwayatTransaksi = () => {
           indicatorColor="primary"
         >
           <Tab label="All" value="All" />
-          <Tab label="Belum Dibayar" value="Belum Dibayar" />
+          {/* <Tab label="Belum Dibayar" value="Belum Dibayar" /> */}
           <Tab label="Sudah Dibayar" value="Sudah Dibayar" />
-          <Tab label="Bisa Dibatalkan" value="Bisa Dibatalkan" />
-          <Tab label="Dibatalkan" value="Dibatalkan" />
+          <Tab label="Sudah Check In" value="Sudah Check In" />
+          <Tab label="Sudah Check Out" value="Sudah Check Out" />
+          {/* <Tab label="Dibatalkan" value="Dibatalkan" /> */}
         </Tabs>
       </Box>
       <Box
@@ -405,28 +308,8 @@ const RiwayatTransaksi = () => {
       >
         <DataGrid rows={data} columns={columns} />
       </Box>
-
-      <Dialog open={batalDialogOpen} onClose={() => setBatalDialogOpen(false)}>
-        <DialogTitle>Batalkan Reservasi?</DialogTitle>
-        <DialogContent>
-          {cancellationMessage && <p>{cancellationMessage}</p>}
-          Are you sure you want to Cancel this item?
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setBatalDialogOpen(false)}>Cancel</Button>
-          <Button
-            onClick={() => {
-              setBatalDialogOpen(false);
-              handleConfirmBatal(selectedRowId);
-            }}
-            color="error"
-          >
-            Batalkan
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 };
 
-export default RiwayatTransaksi;
+export default ListRiwayatTransaksi;
