@@ -1,7 +1,7 @@
 steps:
 # Instalasi dependencies
 - name: 'gcr.io/cloud-builders/npm'
-  args: ['install', '--force']
+  args: ['install']
 
 - name: 'gcr.io/cloud-builders/npm'
   args: ['run', 'build']
