@@ -18,6 +18,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Header from "../../components/Header";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import DetailRiwayatTransaksi from "../cruds/readDetailRiwayatTransaksi"
 
 const TambahinFasilitas = () => {
   const navigate = useNavigate();
@@ -35,6 +36,13 @@ const TambahinFasilitas = () => {
 
   let subtotalNota = 0;
   let pajak = 0;
+
+  
+  const [showDetail, setShowDetail] = useState(false);
+
+  const handleToggleDetail = () => {
+    setShowDetail((prevShowDetail) => !prevShowDetail);
+  };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -242,6 +250,14 @@ const TambahinFasilitas = () => {
       </Dialog>
 
       <Header title="Tambah Fasilitas" />
+
+      {/* Button to toggle DetailRiwayatTransaksi */}
+      <Button onClick={handleToggleDetail}>
+        {showDetail ? "Hide Details" : "Show Details"}
+      </Button>
+
+      {/* Conditionally render DetailRiwayatTransaksi */}
+      {showDetail && <DetailRiwayatTransaksi />}
 
       <Formik {...formik}>
         {({

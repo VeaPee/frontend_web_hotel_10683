@@ -1,21 +1,21 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
 
-const BarChart = ({ data }) => {
+const BarChartThe2nd = ({ data }) => {
   const chartData = {
-    labels: data.map((entry) => entry.Bulan),
+    labels: data.map((entry) => entry.Jenis_Kamar),
     datasets: [
       {
         label: "Grup",
-        backgroundColor: "rgba(0,0,255,0.4)",
-        borderColor: "rgba(0,0,255,1)",
+        backgroundColor: "rgba(75,192,192,0.4)",
+        borderColor: "rgba(75,192,192,1)",
         borderWidth: 1,
         data: data.map((entry) => entry.Grup),
       },
       {
         label: "Personal",
-        backgroundColor: "rgba(255,0,0,0.4)",
-        borderColor: "rgba(255,0,0,1)",
+        backgroundColor: "rgba(255,99,132,0.4)",
+        borderColor: "rgba(255,99,132,1)",
         borderWidth: 1,
         data: data.map((entry) => entry.Personal),
       },
@@ -49,4 +49,4 @@ const BarChart = ({ data }) => {
   return <Bar data={chartData} options={options} style={{ width: "100%", height: "400px" }} />;
 };
 
-export default BarChart;
+export default BarChartThe2nd;

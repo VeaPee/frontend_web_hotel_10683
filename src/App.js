@@ -60,6 +60,11 @@ import CheckIn from "./scenes/check_in";
 import CheckOut from "./scenes/check_out";
 import TambahinFasilitas from "./scenes/cruds/tambahinFasilitas";
 
+import LaporanCustomerBaru from "./scenes/report/customerBaru"
+import PendapatanBulanan from "./scenes/report/pendapatanBulanan"
+import JumlahTamu from "./scenes/report/jumlahTamu"
+import LaporanTopCustomer from "./scenes/report/topCustomer"
+
 import { useState } from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
@@ -149,7 +154,11 @@ function App() {
                 <Route path="/CheckOut/:id" element={<CheckOut />} />
                 <Route path="/tambahinFasilitas/:id" element={<TambahinFasilitas />} />
                 
-
+                <Route path="/laporanCustomer" element={<LaporanCustomerBaru />} />
+                <Route path="/laporanPendapatan" element={<PendapatanBulanan />} />
+                <Route path="/laporanTamu" element={<JumlahTamu />} />
+                <Route path="/laporanTopCustomer" element={<LaporanTopCustomer />} />
+                
               </Routes>
             </Box>
           </main>

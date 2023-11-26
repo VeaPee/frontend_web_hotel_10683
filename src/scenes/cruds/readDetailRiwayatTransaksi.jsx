@@ -140,7 +140,7 @@ const DetailRiwayatTransaksi = () => {
                     subtotal: dataNota.subtotal,
                     jaminan: dataNota.jaminan,
                     depositNota: dataNota.deposit,
-                    cash: dataNota.no_invoice,
+                    cash: dataNota.cash,
                   })
                 ),
 
@@ -791,7 +791,7 @@ const DetailRiwayatTransaksi = () => {
                   variant="standard"
                   type="text"
                   label="Jaminan"
-                  value={"Rp." + totalKamar}
+                  value={"Rp." + transformedData[0].NotaPelunasan[0].jaminan}
                   name="jaminan"
                   sx={{
                     gridColumn: "span 3",
@@ -819,7 +819,7 @@ const DetailRiwayatTransaksi = () => {
                   variant="standard"
                   type="text"
                   label="Cash"
-                  value={"Rp." + cash}
+                  value={"Rp." + transformedData[0].NotaPelunasan[0].cash}
                   name="cash"
                   sx={{
                     gridColumn: "span 3",

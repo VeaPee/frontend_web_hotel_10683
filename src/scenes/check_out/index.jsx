@@ -22,6 +22,7 @@ import { useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
+import DetailRiwayatTransaksi from "../cruds/readDetailRiwayatTransaksi"
 
 const CheckOut = () => {
   // Static Nomor Rekening
@@ -42,6 +43,12 @@ const CheckOut = () => {
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
 
   const [inputUang, setInputUang] = useState("");
+
+  const [showDetail, setShowDetail] = useState(false);
+
+  const handleToggleDetail = () => {
+    setShowDetail((prevShowDetail) => !prevShowDetail);
+  };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -228,7 +235,16 @@ const CheckOut = () => {
 
   return (
     <Box m="20px">
+
       <Header title="Check Out" subtitle="Mengonfirmasi Check Out Customer" />
+
+      {/* Button to toggle DetailRiwayatTransaksi */}
+      <Button onClick={handleToggleDetail}>
+        {showDetail ? "Hide Details" : "Show Details"}
+      </Button>
+
+      {/* Conditionally render DetailRiwayatTransaksi */}
+      {showDetail && <DetailRiwayatTransaksi />}
 
       <Snackbar
         open={snackbarOpen}
@@ -359,7 +375,7 @@ const CheckOut = () => {
               onClick={handleOpenConfirmationDialog}
               style={{ display: "block", margin: "auto" }}
             >
-              Konfirmasi Pembayaran
+              Konfirmasi
             </Button>
           </CardContent>
         </Card>

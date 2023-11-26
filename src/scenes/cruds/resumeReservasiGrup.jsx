@@ -293,7 +293,7 @@ const ResumeReservasi = () => {
       const tax = totalFasilitas * 0.1;
       const totalValue = totalFasilitas + totalKamar + tax;
       const deposit = 300000;
-      const cash = totalValue - (totalKamar + deposit);
+      const cash = totalValue - (totalKamar + deposit) + (totalKamar * 0.5);
 
       console.log("tax :",tax)
       console.log("subtotal :",totalValue)
