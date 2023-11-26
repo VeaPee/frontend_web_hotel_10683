@@ -60,7 +60,7 @@ const JumlahTamu = () => {
       };
 
       const response = await axios.get(
-        "http://localhost:6000/api/v1/customer/getRiwayatTransaksi",
+        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getRiwayatTransaksi",
         config
       );
 

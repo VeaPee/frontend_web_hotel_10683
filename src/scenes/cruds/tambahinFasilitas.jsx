@@ -74,7 +74,7 @@ const TambahinFasilitas = () => {
 
       // Nota Pelunasan
       const responseNota = await axios.get(
-        `http://localhost:6000/api/v1/customer/getRiwayatTransaksi/${id}`,
+        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getRiwayatTransaksi/${id}`,
         config
       );
 
@@ -121,7 +121,7 @@ const TambahinFasilitas = () => {
       // Send each facility individually to the server
       for (const facility of selectedFacilities) {
         const response = await axios.post(
-          "http://localhost:6000/api/v1/transaksi/transaksiFasilitas",
+          "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/transaksiFasilitas",
           facility,
           config
         );
@@ -144,7 +144,7 @@ const TambahinFasilitas = () => {
       pajak = subtotalNota * 0.1;
 
       const responseNota = await axios.put(
-        `http://localhost:6000/api/v1/transaksi/tambahFasilitasNota/${id}`,
+        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/tambahFasilitasNota/${id}`,
         {
           reservasiId: reservasiId,
           subtotal: dataNota[0].subtotal + subtotalNota + pajak,

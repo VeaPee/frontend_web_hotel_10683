@@ -94,7 +94,7 @@ const NomorKamar = () => {
 
       const response = await axios.get(
         // "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar",
-        "http://localhost:6000/api/v1/kamar/getAllNomorKamar",
+        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getAllNomorKamar",
         config
       );
 
@@ -134,7 +134,7 @@ const NomorKamar = () => {
 
       await axios.delete(
         // `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/deleteKamar/${id}`,
-        `http://localhost:6000/api/v1/kamar/deleteNomorKamar/${id}`,
+        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/deleteNomorKamar/${id}`,
         config
       );
 

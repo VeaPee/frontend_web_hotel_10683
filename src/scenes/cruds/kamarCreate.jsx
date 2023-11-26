@@ -31,8 +31,8 @@ const KamarCreate = () => {
 
     axios
       .post(
-        // "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/addKamar",
-        `http://localhost:6000/api/v1/kamar/addKamar`,
+        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/addKamar",
+        // `http://localhost:6000/api/v1/kamar/addKamar`,
         {
           jenisKamar: values.jenisKamar,
           jenisBed: values.jenisBed,

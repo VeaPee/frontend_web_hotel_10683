@@ -130,7 +130,7 @@ const ResumeReservasi = () => {
       setIsLoading(true);
 
       const response = await axios.get(
-        `http://localhost:6000/api/v1/customer/getRiwayatTransaksi/${id}`,
+        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getRiwayatTransaksi/${id}`,
         config
       );
 
@@ -302,7 +302,7 @@ const ResumeReservasi = () => {
       console.log("jaminan :",totalKamar)
 
       const response = await axios.post(
-        `http://localhost:6000/api/v1/transaksi/konfirmasiResume/${id}`,
+        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/konfirmasiResume/${id}`,
         {
           tax: tax,
           subtotal: totalValue,

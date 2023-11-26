@@ -98,7 +98,7 @@ const PemesananFasilitasPageGrup = () => {
       // Send each facility individually to the server
       for (const facility of selectedFacilities) {
         const response = await axios.post(
-          "http://localhost:6000/api/v1/transaksi/transaksiFasilitas",
+          "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/transaksiFasilitas",
           facility,
           config
         );

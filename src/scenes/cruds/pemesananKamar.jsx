@@ -71,7 +71,7 @@ const PemesananKamarPage = () => {
           console.log("SUBTOTAL = ", calculatedHarga)
           for (const kamar of cart) {
             const responseKamar = await axios.post(
-              "http://localhost:6000/api/v1/transaksi/transaksiKamar",
+              "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/transaksiKamar",
               {
                 reservasiId: reservasiId,
                 kamarId: kamar.id,
@@ -103,7 +103,7 @@ const PemesananKamarPage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:6000/api/v1/transaksi/transaksiReservasi",
+        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/transaksiReservasi",
         {
           check_in: tanggalAwal,
           check_out: tanggalAkhir,

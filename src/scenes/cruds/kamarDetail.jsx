@@ -44,7 +44,7 @@ const DetailKamarPage = () => {
     };
 
     axios
-      .get(`http://localhost:6000/api/v1/kamar/getKamarByID/${id}`, config)
+      .get(`https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getKamarByID/${id}`, config)
       .then((response) => {
         const kamarData = response.data.data.kamar;
         setData(kamarData);

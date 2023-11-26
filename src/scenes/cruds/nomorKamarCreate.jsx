@@ -41,8 +41,7 @@ const NomorKamarCreate = () => {
 
     axios
       .post(
-        // "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/addKamar",
-        `http://localhost:6000/api/v1/kamar/addNomorKamar`,
+        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/addNomorKamar`,
         {
           kamarId: values.kamarId,
           nomor_kamar: values.nomor_kamar,
@@ -91,7 +90,7 @@ const NomorKamarCreate = () => {
       };
       // Fetch the kamar options from the backend API
       axios
-        .get("http://localhost:6000/api/v1/kamar/getAllKamar", config)
+        .get("https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar", config)
         .then((response) => {
           setKamarOptions(response.data.data);
         })

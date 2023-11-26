@@ -58,7 +58,7 @@ const KonfirmasiPembayaran = () => {
     console.log('Request Headers:', config.headers);
     try {
       const response = await axios.put(
-        `http://localhost:6000/api/v1/transaksi/konfirmasiPembayaran/${id}`,
+        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/konfirmasiPembayaran/${id}`,
         null,
         config
       );
@@ -102,7 +102,7 @@ const KonfirmasiPembayaran = () => {
       };
       setIsLoading(true);
       const response = await axios.get(
-        `http://localhost:6000/api/v1/customer/getRiwayatTransaksi/${id}`,
+        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getRiwayatTransaksi/${id}`,
         config
       );
 
