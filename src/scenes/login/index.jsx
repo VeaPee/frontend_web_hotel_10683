@@ -20,6 +20,7 @@ const Login = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarOpenCustomer, setSnackbarOpenCustomer] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
@@ -29,7 +30,7 @@ const Login = () => {
       const timeoutId = setTimeout(() => {
         navigate("/");
         window.location.reload();
-      }, 3000); // Adjust the delay as needed (in milliseconds)
+      }, 2000); // Adjust the delay as needed (in milliseconds)
 
       // Clear the timeout when the component unmounts
       return () => clearTimeout(timeoutId);
@@ -53,12 +54,30 @@ const Login = () => {
         console.log(result);
         if (result.data.message === "success") {
           console.log("Login Success");
+          console.log("Data",result.data.data.Customer.length);
           localStorage.setItem("token", result.data.data.token);
+
           setSnackbarMessage("Login successful!");
           setSnackbarSeverity("success");
-          setSnackbarOpen(true);
-          // navigate("/");
-          // window.location.reload();
+
+          if (
+            result.data.data.roleId === 6 &&
+            result.data.data.Customer.length === 0
+          ) {
+            setSnackbarOpenCustomer(true);
+
+            // Use setTimeout to delay the navigation and window reload
+            const timeoutId = setTimeout(() => {
+              navigate("/customercreate");
+              window.location.reload();
+            }, 2000); // Adjust the delay as needed (in milliseconds)
+
+            // Clear the timeout when the component unmounts
+            return () => clearTimeout(timeoutId);
+          } else {
+            console.log("Masuk Sini");
+            setSnackbarOpen(true);
+          }
         } else {
           setSnackbarMessage("Username atau Password Salah! Coba Lagi");
           setSnackbarSeverity("error");
@@ -67,24 +86,41 @@ const Login = () => {
       })
       .catch((error) => {
         console.log(error);
-        if (error.response && error.response.data && error.response.data.message) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
           const errorMessage = error.response.data.message;
           setSnackbarMessage(errorMessage);
         } else {
           setSnackbarMessage("An error occurred. Please try again later.");
         }
-      
+
         setSnackbarSeverity("error");
         setSnackbarOpen(true);
       });
   };
-  
+
   return (
     <Box m="20px">
       <Header title="Login" subtitle="Login to your Account" />
 
       <Snackbar
         open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity={snackbarSeverity}>
+          <AlertTitle>
+            {snackbarSeverity === "error" ? "Error" : "Success"}
+          </AlertTitle>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={snackbarOpenCustomer}
         autoHideDuration={5000}
         onClose={handleSnackbarClose}
       >
