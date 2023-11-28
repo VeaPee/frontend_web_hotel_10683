@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, TextField} from "@mui/material";
+import { Box, Button, TextField, Snackbar, AlertTitle } from "@mui/material";
+import Alert from "@mui/material/Alert";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -14,13 +15,13 @@ const KamarCreate = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [token, setToken] = useState("");
 
-  // const [snackbarOpen, setSnackbarOpen] = useState(false);
-  // const [snackbarMessage, setSnackbarMessage] = useState("");
-  // const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  // const handleSnackbarClose = () => {
-  //   setSnackbarOpen(false);
-  // };
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   const handleFormSubmit = (values, currentUserToken) => {
     const config = {
@@ -47,15 +48,29 @@ const KamarCreate = () => {
       .then((result) => {
         console.log(result);
         if (result.data.error === true) {
-          setErrorMessage(result.data.message);
-          alert(errorMessage);
+          setSnackbarMessage(result.data.message);
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
           navigate("/kamarcreate");
         } else {
-          alert("Berhasil menambah Kamar!.");
+          setSnackbarMessage(result.data.message);
+          setSnackbarSeverity("success");
+          setSnackbarOpen(true);
           navigate("/kamar");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        if (error.response && error.response.data && error.response.data.message) {
+          const errorMessage = error.response.data.message;
+          setSnackbarMessage(errorMessage);
+        } else {
+          setSnackbarMessage("An error occurred. Please try again later.");
+        }
+      
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      });
+      
   };
 
   const getCurrentUserToken = () => {
@@ -74,6 +89,19 @@ const KamarCreate = () => {
   return (
     <Box m="20px">
       <Header title="Create Kamar" subtitle="Create a new Kamar" />
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity={snackbarSeverity}>
+          <AlertTitle>
+            {snackbarSeverity === "error" ? "Error" : "Success"}
+          </AlertTitle>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
 
       <Formik
         onSubmit={(values) => handleFormSubmit(values, token)}

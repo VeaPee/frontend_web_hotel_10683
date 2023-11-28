@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, TextField} from "@mui/material";
+import { Box, Button, TextField, Snackbar, AlertTitle } from "@mui/material";
+import Alert from "@mui/material/Alert";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -16,13 +17,13 @@ const KamarUpdate = () => {
   const { id } = useParams();
   const [initialValues, setInitialValues] = useState(null);
 
-  // const [snackbarOpen, setSnackbarOpen] = useState(false);
-  // const [snackbarMessage, setSnackbarMessage] = useState("");
-  // const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  // const handleSnackbarClose = () => {
-  //   setSnackbarOpen(false);
-  // };
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   const getCurrentUserToken = () => {
     // Implement the function to retrieve the token for the current user
@@ -43,10 +44,9 @@ const KamarUpdate = () => {
         Authorization: `Bearer ${currentUserToken}`,
       },
     };
-
-    axios
-      .put(
-        // `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/updateKamar/${id}`,
+  
+    try {
+      const result = await axios.put(
         `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/updateKamar/${id}`,
         {
           jenisKamar: values.jenisKamar,
@@ -55,77 +55,100 @@ const KamarUpdate = () => {
           luas: values.luas,
           fasilitas: values.fasilitas,
           jumlah_bed: values.jumlah_bed,
-          // nomor_kamar: values.nomor_kamar,
         },
         config
-      )
-      .then((result) => {
-        console.log(result);
-        if (result.data.error === true) {
-          setErrorMessage(result.data.message);
-          alert(errorMessage);
-          navigate("/kamarupdate");
-        } else {
-          alert("Berhasil mengubah Kamar!.");
-          navigate("/kamar");
-        }
-      })
-      .catch((err) => console.log(err));
-  };
-
-  useEffect(() => {
-  const fetchInitialValues = async (id, currentUserToken) => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${currentUserToken}`,
-      },
-    };
-
-    try {
-      const response = await axios.get(
-        // `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getKamarByID/${id}`,
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getKamarByID/${id}`,
-        config
       );
-
-      const kamarData = response.data.data.kamar; // Access the data property of the response
-
-      // Set the initial values with the fetched data
-      setInitialValues({
-        jenisKamar: kamarData.jenisKamar,
-        jenisBed: kamarData.jenisBed,
-        kapasitas: kamarData.kapasitas,
-        luas: kamarData.luas,
-        fasilitas: kamarData.fasilitas,
-        jumlah_bed: kamarData.jumlah_bed,
-        // nomor_kamar: kamarData.nomor_kamar,
-      });
+  
+      console.log(result);
+  
+      if (result.data.error === true) {
+        setSnackbarMessage(result.data.message);
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        navigate("/kamarupdate");
+      } else {
+        setSnackbarMessage(result.data.message);
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+        navigate("/kamar");
+      }
     } catch (error) {
-      console.log(error);
+      if (error.response && error.response.data && error.response.data.message) {
+        const errorMessage = error.response.data.message;
+        setSnackbarMessage(errorMessage);
+      } else {
+        setSnackbarMessage("An error occurred. Please try again later.");
+      }
+  
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
-
-  const initializeForm = async () => {
-    await fetchInitialValues(id, token);
-  };
-
-  initializeForm();
-}, [id, token]);
   
 
-//   useEffect(() => {
-//     fetchInitialValues(id,token);
-//   }, [id,token]);
+  useEffect(() => {
+    const fetchInitialValues = async (id, currentUserToken) => {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${currentUserToken}`,
+        },
+      };
+
+      try {
+        const response = await axios.get(
+          // `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getKamarByID/${id}`,
+          `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getKamarByID/${id}`,
+          config
+        );
+
+        const kamarData = response.data.data.kamar; // Access the data property of the response
+
+        // Set the initial values with the fetched data
+        setInitialValues({
+          jenisKamar: kamarData.jenisKamar,
+          jenisBed: kamarData.jenisBed,
+          kapasitas: kamarData.kapasitas,
+          luas: kamarData.luas,
+          fasilitas: kamarData.fasilitas,
+          jumlah_bed: kamarData.jumlah_bed,
+          // nomor_kamar: kamarData.nomor_kamar,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const initializeForm = async () => {
+      await fetchInitialValues(id, token);
+    };
+
+    initializeForm();
+  }, [id, token]);
+
+  //   useEffect(() => {
+  //     fetchInitialValues(id,token);
+  //   }, [id,token]);
 
   if (!initialValues) {
     return <div>Loading...</div>;
   }
 
-
-
   return (
     <Box m="20px">
       <Header title="Update Kamar" subtitle="Change your Kamar" />
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity={snackbarSeverity}>
+          <AlertTitle>
+            {snackbarSeverity === "error" ? "Error" : "Success"}
+          </AlertTitle>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
 
       <Formik
         onSubmit={(values) => handleFormSubmit(values, token)}

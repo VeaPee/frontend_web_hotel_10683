@@ -183,7 +183,7 @@ const Profile = () => {
                 backgroundColor: "#FFA500",
             }}
             >
-              Create Customer
+              Create Profile
             </Button>
           </Box>
         )}

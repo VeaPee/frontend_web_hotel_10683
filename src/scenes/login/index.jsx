@@ -1,5 +1,13 @@
-import React from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Snackbar,
+  AlertTitle,
+} from "@mui/material";
+import Alert from "@mui/material/Alert";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -11,29 +19,82 @@ const Login = () => {
   const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  useEffect(() => {
+    if (snackbarOpen) {
+      // Use setTimeout to delay the navigation and window reload
+      const timeoutId = setTimeout(() => {
+        navigate("/");
+        window.location.reload();
+      }, 3000); // Adjust the delay as needed (in milliseconds)
+
+      // Clear the timeout when the component unmounts
+      return () => clearTimeout(timeoutId);
+    }
+  }, [snackbarOpen]);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   const handleFormSubmit = (values) => {
     axios
-      .post("https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/auth/login", {
-        username: values.username,
-        password: values.password,
-      })
+      .post(
+        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/auth/login",
+        {
+          username: values.username,
+          password: values.password,
+        }
+      )
       .then((result) => {
         console.log(result);
         if (result.data.message === "success") {
           console.log("Login Success");
-          alert("Login successful!");
           localStorage.setItem("token", result.data.data.token);
-          navigate("/");
-          window.location.reload();
+          setSnackbarMessage("Login successful!");
+          setSnackbarSeverity("success");
+          setSnackbarOpen(true);
+          // navigate("/");
+          // window.location.reload();
         } else {
-          alert("Username atau Password Salah! Coba Lagi");
+          setSnackbarMessage("Username atau Password Salah! Coba Lagi");
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        if (error.response && error.response.data && error.response.data.message) {
+          const errorMessage = error.response.data.message;
+          setSnackbarMessage(errorMessage);
+        } else {
+          setSnackbarMessage("An error occurred. Please try again later.");
+        }
+      
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      });
   };
+  
   return (
     <Box m="20px">
       <Header title="Login" subtitle="Login to your Account" />
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity={snackbarSeverity}>
+          <AlertTitle>
+            {snackbarSeverity === "error" ? "Error" : "Success"}
+          </AlertTitle>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
 
       <Formik
         onSubmit={handleFormSubmit}
