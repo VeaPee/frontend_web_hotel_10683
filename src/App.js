@@ -80,11 +80,6 @@ function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
 
-  let cart = [
-    { id: 1, jenisKamar: "Standard Room", jenisBed: "Single Bed", jumlah_bed: 1 },
-    // Add more dummy data as needed
-  ];
-
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
