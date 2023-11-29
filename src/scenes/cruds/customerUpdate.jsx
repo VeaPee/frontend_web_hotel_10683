@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, TextField} from "@mui/material";
+import { Box, Button, TextField, Snackbar, AlertTitle} from "@mui/material";
+import Alert from "@mui/material/Alert";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -16,22 +17,33 @@ const CustomerUpdate = () => {
   const { id } = useParams();
   const [initialValues, setInitialValues] = useState(null);
 
-  // const [snackbarOpen, setSnackbarOpen] = useState(false);
-  // const [snackbarMessage, setSnackbarMessage] = useState("");
-  // const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  // const handleSnackbarClose = () => {
-  //   setSnackbarOpen(false);
-  // };
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  useEffect(() => {
+    if (snackbarOpen) {
+
+      const timeoutId = setTimeout(() => {
+        navigate("/profile");
+        // window.location.reload();
+      }, 2000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [snackbarOpen]);
 
   const getCurrentUserToken = () => {
-    // Implement the function to retrieve the token for the current user
-    // Return the token here
+
     return localStorage.getItem("token");
   };
 
   useEffect(() => {
-    // Get the token for the current user from your authentication system
+
     const currentUserToken = getCurrentUserToken();
     console.log(currentUserToken);
     setToken(currentUserToken);
@@ -60,14 +72,35 @@ const CustomerUpdate = () => {
       .then((result) => {
         console.log(result);
         if (result.data.error === true) {
-          setErrorMessage(result.data.message);
-          alert(errorMessage);
+          // setErrorMessage(result.data.message);
+          // alert(errorMessage);
+          setSnackbarMessage(result.data.message);
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
         } else {
-          alert("Berhasil mengubah Customer!.");
-          navigate("/");
+          setSnackbarMessage(result.data.message);
+          setSnackbarSeverity("success");
+          setSnackbarOpen(true);
+          // alert("Berhasil mengubah Customer!.");
+          // navigate("/");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        console.log(error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const errorMessage = error.response.data.message;
+          setSnackbarMessage(errorMessage);
+        } else {
+          setSnackbarMessage("An error occurred. Please try again later.");
+        }
+
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      });
   };
 
   useEffect(() => {
@@ -84,9 +117,8 @@ const CustomerUpdate = () => {
           config
         );
 
-        const customerData = response.data.data.customer; // Access the data property of the response
+        const customerData = response.data.data.customer;
 
-        // Set the initial values with the fetched data
         setInitialValues({
             jenis_customer: customerData.jenis_customer,
             nama_customer: customerData.nama_customer,
@@ -119,6 +151,19 @@ const CustomerUpdate = () => {
   return (
     <Box m="20px">
       <Header title="Update Customer" subtitle="Change your Customer Data" />
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity={snackbarSeverity}>
+          <AlertTitle>
+            {snackbarSeverity === "error" ? "Error" : "Success"}
+          </AlertTitle>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
 
       <Formik
         onSubmit={(values) => handleFormSubmit(values, token)}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, TextField} from "@mui/material";
+import { Box, Button, TextField, Snackbar, AlertTitle} from "@mui/material";
+import Alert from "@mui/material/Alert";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -14,13 +15,25 @@ const CustomerCreate = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [token, setToken] = useState("");
 
-  // const [snackbarOpen, setSnackbarOpen] = useState(false);
-  // const [snackbarMessage, setSnackbarMessage] = useState("");
-  // const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  // const handleSnackbarClose = () => {
-  //   setSnackbarOpen(false);
-  // };
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  useEffect(() => {
+    if (snackbarOpen) {
+
+      const timeoutId = setTimeout(() => {
+        navigate("/");
+        // window.location.reload();
+      }, 2000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [snackbarOpen]);
 
   const handleFormSubmit = (values, currentUserToken) => {
     const config = {
@@ -47,24 +60,42 @@ const CustomerCreate = () => {
       .then((result) => {
         console.log(result);
         if (result.data.error === true) {
-          setErrorMessage(result.data.message);
-          alert(errorMessage);
+          // setErrorMessage(result.data.message);
+          // alert(errorMessage);
+          setSnackbarMessage(result.data.message);
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
         } else {
-          alert("Berhasil menambah Customer!.");
-          navigate("/");
+          // alert("Berhasil menambah Customer!.");
+          // navigate("/");
+          setSnackbarMessage(result.data.message);
+          setSnackbarSeverity("success");
+          setSnackbarOpen(true);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        console.log(error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const errorMessage = error.response.data.message;
+          setSnackbarMessage(errorMessage);
+        } else {
+          setSnackbarMessage("An error occurred. Please try again later.");
+        }
+
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      });
   };
 
   const getCurrentUserToken = () => {
-    // Implement the function to retrieve the token for the current user
-    // Return the token here
     return localStorage.getItem("token");
   };
 
   useEffect(() => {
-    // Get the token for the current user from your authentication system
     const currentUserToken = getCurrentUserToken();
     console.log(currentUserToken);
     setToken(currentUserToken);
@@ -74,6 +105,19 @@ const CustomerCreate = () => {
     <Box m="20px">
       <Header title="Create Customer" subtitle="Create a new Customer" />
 
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert severity={snackbarSeverity}>
+          <AlertTitle>
+            {snackbarSeverity === "error" ? "Error" : "Success"}
+          </AlertTitle>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      
       <Formik
         onSubmit={(values) => handleFormSubmit(values, token)}
         initialValues={initialValues}
