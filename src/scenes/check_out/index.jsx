@@ -16,7 +16,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Header from "../../components/Header";
@@ -27,9 +26,8 @@ import DetailRiwayatTransaksi from "../cruds/readDetailRiwayatTransaksi"
 const CheckOut = () => {
   // Static Nomor Rekening
   const navigate = useNavigate();
-  const nomorRekening = "770011770022";
+
   const { id } = useParams();
-  const [proofOfPayment, setProofOfPayment] = useState(null);
 
   const [transformedData, setTransformedData] = useState([]);
 
@@ -78,7 +76,6 @@ const CheckOut = () => {
         setSnackbarMessage(response.data.message);
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
-        setProofOfPayment(null);
         navigate(`/detailriwayat/${id}`);
         // navigate("/");
       }

@@ -16,19 +16,17 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
+import DetailRiwayatTransaksi from "../cruds/readDetailRiwayatTransaksi"
 
 const CheckIn = () => {
   // Static Nomor Rekening
   const navigate = useNavigate();
-  const nomorRekening = "770011770022";
   const { id } = useParams();
-  const [proofOfPayment, setProofOfPayment] = useState(null);
 
   const [transformedData, setTransformedData] = useState([]);
 
@@ -40,6 +38,10 @@ const CheckIn = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+
+  const handleToggleDetail = () => {
+    setShowDetail((prevShowDetail) => !prevShowDetail);
+  };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -69,7 +71,6 @@ const CheckIn = () => {
         setSnackbarMessage(response.data.message);
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
-        setProofOfPayment(null);
         navigate(`/listreservasi`);
         // navigate("/");
       }
@@ -181,6 +182,14 @@ const CheckIn = () => {
     <Box m="20px">
       <Header title="Check In" subtitle="Mengonfirmasi Check In Customer" />
 
+      {/* Button to toggle DetailRiwayatTransaksi */}
+      <Button onClick={handleToggleDetail}>
+        {showDetail ? "Hide Details" : "Show Details"}
+      </Button>
+
+      {/* Conditionally render DetailRiwayatTransaksi */}
+      {showDetail && <DetailRiwayatTransaksi />}
+      
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={5000}
