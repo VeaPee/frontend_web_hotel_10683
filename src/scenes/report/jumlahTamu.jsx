@@ -117,7 +117,7 @@ const JumlahTamu = () => {
     const reportData = [];
     let totalPersonal = 0;
     let totalGrup = 0;
-
+  
     // Iterate over each unique jenisKamar
     data.forEach((jenisKamar, index) => {
       const personalData = transformedData.filter(
@@ -126,27 +126,34 @@ const JumlahTamu = () => {
             (dataKamar) => dataKamar.jenisKamar === jenisKamar
           ) && item.jenis_customer === "Personal"
       );
-
+  
       const grupData = transformedData.filter(
         (item) =>
           item.DetailReservasiKamar.some(
             (dataKamar) => dataKamar.jenisKamar === jenisKamar
           ) && item.jenis_customer === "Grup"
       );
-
-      const personalCount = personalData.reduce(
-        (sum, item) => sum + item.dewasa + item.anak,
-        0
-      );
-
-      const grupCount = grupData.reduce(
-        (sum, item) => sum + item.dewasa + item.anak,
-        0
-      );
-
+  
+      // Calculate counts and round to the nearest integer
+      const personalCount =
+        personalData.length > 0
+          ? Math.round(
+              personalData.reduce((sum, item) => sum + item.dewasa + item.anak, 0) /
+                personalData.length
+            )
+          : 0;
+  
+      const grupCount =
+        grupData.length > 0
+          ? Math.round(
+              grupData.reduce((sum, item) => sum + item.dewasa + item.anak, 0) /
+                grupData.length
+            )
+          : 0;
+  
       totalPersonal += personalCount;
       totalGrup += grupCount;
-
+  
       reportData.push({
         No: index + 1,
         Jenis_Kamar: jenisKamar,
@@ -155,7 +162,7 @@ const JumlahTamu = () => {
         Total: personalCount + grupCount,
       });
     });
-
+  
     // Add a row for the totals
     reportData.push({
       No: "",
@@ -164,9 +171,12 @@ const JumlahTamu = () => {
       Personal: totalPersonal,
       Total: totalPersonal + totalGrup,
     });
-
+  
     return reportData;
   };
+  
+  
+  
 
   return (
     <div ref={componentRef}>
