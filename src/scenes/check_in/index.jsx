@@ -39,6 +39,8 @@ const CheckIn = () => {
 
   const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
 
+  const [showDetail, setShowDetail] = useState(false);
+  
   const handleToggleDetail = () => {
     setShowDetail((prevShowDetail) => !prevShowDetail);
   };
@@ -189,7 +191,7 @@ const CheckIn = () => {
 
       {/* Conditionally render DetailRiwayatTransaksi */}
       {showDetail && <DetailRiwayatTransaksi />}
-      
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={5000}
