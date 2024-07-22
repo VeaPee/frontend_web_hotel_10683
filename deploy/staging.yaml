@@ -1,0 +1,12 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: staging-frontend
+spec:
+  template:
+    spec:
+      containers:
+      - image: app
+        resources:
+          limits:
+            memory: 1024Mi

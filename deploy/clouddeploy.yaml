@@ -1,0 +1,30 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+  name: pipeline-frontend
+description: main application pipeline
+serialPipeline:
+  stages:
+  - targetId: run-staging-frontend
+    profiles: [staging-frontend]
+  - targetId: run-prod-frontend
+    profiles: [prod-frontend]
+---
+
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: run-staging-frontend
+description: Cloud Run Staging service
+run:
+  location: projects/kafe-tabebuya/locations/asia-southeast2
+---
+
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: run-prod-frontend
+description: Cloud Run production service
+requireApproval: true
+run:
+  location: projects/kafe-tabebuya/locations/asia-southeast2

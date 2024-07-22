@@ -1,15 +1,24 @@
+substitutions:
+  _REGION: asia-southeast2
 steps:
-# Instalasi dependencies
-- name: 'gcr.io/cloud-builders/npm'
-  args: ['install', '--legacy-peer-deps']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/app-frontend:$COMMIT_SHA', '.']
+  id: build and testing
 
-- name: 'gcr.io/cloud-builders/npm'
-  args: ['run', 'build']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['run', '--rm', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/app-frontend:$COMMIT_SHA', npm', 'run', 'test']
+  id: test
 
-#Make sure dependencies
-- name: 'gcr.io/cloud-builders/npm'
-  args: ['install']
-
-# Deploy aplikasi ke App Engine
-- name: 'gcr.io/cloud-builders/gcloud'
-  args: ['app', 'deploy']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/app-frontend:$COMMIT_SHA']
+  id: push
+  
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+  entrypoint: gcloud
+  args: 
+      [
+      "deploy", "releases", "create", "release-$SHORT_SHA",
+      "--delivery-pipeline", "pipeline-frontend",
+      "--region", "${_REGION}",
+      "--images", "app=${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/app-frontend:$COMMIT_SHA"
+      ]
