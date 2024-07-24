@@ -42,7 +42,7 @@
     "build": "react-scripts build",
     "test": "vitest --no-watch",
     "eject": "react-scripts eject",
-    "test:react-scripts": "react-scripts test"
+    "test:modewatch": "react-scripts test"
   },
   "devDependencies": {
     "@babel/core": "^7.24.9",

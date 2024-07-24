@@ -46,11 +46,13 @@ describe("Profile Component", () => {
       </BrowserRouter>
     );
 
+    // Add a delay of 3 seconds
+    await new Promise((r) => setTimeout(r, 5000));
+
     // Wait for data to load (you might use findBy* queries)
     const usernameInput = await screen.findByLabelText("Username");
     expect(usernameInput).toHaveValue("testuser"); 
   });
-
 
   it("handles the Update Password button click", async () => {
     axios.get.mockResolvedValue({
@@ -73,11 +75,14 @@ describe("Profile Component", () => {
       </BrowserRouter>
     );
 
+    // Add a delay of 3 seconds
+    await new Promise((r) => setTimeout(r, 5000));
+
     const updateButton = await screen.findByText("Update Password");
     fireEvent.click(updateButton);
 
     // Assertions:
-  
+    // Add necessary assertions here
   });
 
   it("fetches and displays customer data for a role 6 user", async () => {
@@ -117,6 +122,9 @@ describe("Profile Component", () => {
         <Profile /> 
       </BrowserRouter>
     );
+
+    // Add a delay of 3 seconds
+    await new Promise((r) => setTimeout(r, 5000));
 
     const jenisCustomerInput = await screen.findByLabelText("Jenis Customer"); 
     expect(jenisCustomerInput).toHaveValue("Individual");

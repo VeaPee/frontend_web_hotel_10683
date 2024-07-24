@@ -19,7 +19,7 @@ const hotelRooms = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     price: "Rp. 350000 per malam",
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/56/Hotel-room-renaissance-columbus-ohio.jpg",
+      "https://blog.bookingtogo.com/wp-content/uploads/2021/12/jenis-jenis-kamar-hotel.jpg",
   },
   {
     id: 3,
@@ -28,7 +28,7 @@ const hotelRooms = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     price: "Rp. 500000 per malam",
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/56/Hotel-room-renaissance-columbus-ohio.jpg",
+      "https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/Studio-Munge-Esplanade-master-bedroom.jpg",
   },
   {
     id: 4,
@@ -37,9 +37,18 @@ const hotelRooms = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     price: "Rp. 620000 per malam",
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/56/Hotel-room-renaissance-columbus-ohio.jpg",
+      "https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/An-elegant-five-star-hotel-room-interior.jpg",
   },
 ];
+
+//https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/Bata-yang-Dibiarkan-Terekspose-di-Kamar-Blackbird-Hotel-Bandung.jpg
+//https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/japanese-bedroom.jpg
+//https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/bedroom-chairs.jpg
+//https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/bkpam2235048_seakinghelicopterglamping-063-1-e1503311755353.jpg
+//https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/simple-false-ceiling-design.jpg
+//https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/Studio-Munge-Esplanade-master-bedroom.jpg
+//https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/White-master-bedrooms-3.jpg
+//https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/vidago-palace-hotel-portugal-bedroom.jpg
 
 const Dashboard = () => {
   const theme = useTheme();
