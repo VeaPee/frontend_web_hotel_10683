@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import Register from "../src/scenes/register/index.jsx"; // Correct path to your Register component
+import Register from "../src/scenes/register/index.jsx";
 import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
 
@@ -44,6 +44,7 @@ describe("Register Component", () => {
     // Attempt submission without filling any fields
     fireEvent.click(registerButton);
 
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     // Assertions for validation errors
     expect(await screen.findByText("Username is required")).toBeVisible();
     expect(await screen.findByText("Password is required")).toBeVisible();

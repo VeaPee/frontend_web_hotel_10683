@@ -28,6 +28,36 @@ describe("Login Component", () => {
     expect(loginButton).toBeInTheDocument();
   });
 
+  it("renders the form", () => {
+    render(
+      <BrowserRouter>
+        <Login />
+      </BrowserRouter>
+    );
+    const usernameInput = screen.getByLabelText("Username");
+    const passwordInput = screen.getByLabelText("Password");
+    const loginButton = screen.getByText("Login");
+
+    expect(usernameInput).toBeInTheDocument();
+    expect(passwordInput).toBeInTheDocument();
+    expect(loginButton).toBeInTheDocument();
+  });
+
+  it("renders the login form", () => {
+    render(
+      <BrowserRouter>
+        <Login />
+      </BrowserRouter>
+    );
+    const usernameInput = screen.getByLabelText("Username");
+    const passwordInput = screen.getByLabelText("Password");
+    const loginButton = screen.getByText("Login");
+
+    expect(usernameInput).toBeInTheDocument();
+    expect(passwordInput).toBeInTheDocument();
+    expect(loginButton).toBeInTheDocument();
+  });
+
   it("validates the form fields", async () => {
     render(
       <BrowserRouter>
@@ -47,6 +77,21 @@ describe("Login Component", () => {
     expect(await screen.findByText("required username")).toBeVisible();
     expect(await screen.findByText("required password")).toBeVisible(); // Check for both username and password errors
   }, 10000); // Set timeout to 10 seconds for this test
+
+  it("renders the login form", () => {
+    render(
+      <BrowserRouter>
+        <Login />
+      </BrowserRouter>
+    );
+    const usernameInput = screen.getByLabelText("Username");
+    const passwordInput = screen.getByLabelText("Password");
+    const loginButton = screen.getByText("Login");
+
+    expect(usernameInput).toBeInTheDocument();
+    expect(passwordInput).toBeInTheDocument();
+    expect(loginButton).toBeInTheDocument();
+  });
 
   it("displays an error message for invalid credentials", async () => {
     // Mock axios.post to simulate an unsuccessful login response
