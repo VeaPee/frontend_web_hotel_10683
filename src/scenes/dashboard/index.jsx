@@ -10,7 +10,7 @@ const hotelRooms = [
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     price: "Rp. 300000 per malam",
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/56/Hotel-room-renaissance-columbus-ohio.jpg",
+      "https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/Bata-yang-Dibiarkan-Terekspose-di-Kamar-Blackbird-Hotel-Bandung.jpg",
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const hotelRooms = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     price: "Rp. 350000 per malam",
     image:
-      "https://blog.bookingtogo.com/wp-content/uploads/2021/12/jenis-jenis-kamar-hotel.jpg",
+      "https://ik.imagekit.io/pashouses/pandu/pages/wp-content/uploads/2023/05/japanese-bedroom.jpg",
   },
   {
     id: 3,
@@ -57,7 +57,7 @@ const Dashboard = () => {
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="Dashboard" subtitle="Welcome to Grand Atma Hotel" />
+        <Header title="Dashboard CI/CD 25/07/2024 02:21" subtitle="Welcome to Grand Atma Hotel Testing CI/CD" />
       </Box>
 
       {/* HOTEL ROOMS */}
