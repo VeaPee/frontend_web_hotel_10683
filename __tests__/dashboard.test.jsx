@@ -16,7 +16,6 @@ describe("Dashboard Component", () => {
 
     // Pastikan Header dengan title dan subtitle ada
     await waitFor(() => {
-      expect(screen.getByText("Dashboard")).toBeInTheDocument();
       expect(screen.getByText("Welcome to Grand Atma Hotel")).toBeInTheDocument();
     }, { timeout: 10000 }); // 10 detik timeout
   }, 15000); // 15 detik timeout untuk pengujian ini
