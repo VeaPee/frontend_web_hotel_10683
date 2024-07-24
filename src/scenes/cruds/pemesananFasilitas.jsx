@@ -53,7 +53,7 @@ const PemesananFasilitasPage = () => {
       };
 
       const response = await axios.get(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/fasilitas/getAllFasilitas",
+        "http://35.198.205.6:5000/api/v1/fasilitas/getAllFasilitas",
         config
       );
 
@@ -98,7 +98,7 @@ const PemesananFasilitasPage = () => {
       // Send each facility individually to the server
       for (const facility of selectedFacilities) {
         const response = await axios.post(
-          "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/transaksiFasilitas",
+          "http://35.198.205.6:5000/api/v1/transaksi/transaksiFasilitas",
           facility,
           config
         );

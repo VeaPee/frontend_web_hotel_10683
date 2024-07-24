@@ -45,7 +45,7 @@ const NomorKamarUpdate = () => {
 
     try {
       const response = await axios.put(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/updateNomorKamar/${id}`,
+        `http://35.198.205.6:5000/api/v1/kamar/updateNomorKamar/${id}`,
         {
           kamarId: values.kamarId,
           nomor_kamar: values.nomor_kamar,
@@ -92,7 +92,7 @@ const NomorKamarUpdate = () => {
       };
       // Fetch the kamar options from the backend API
       axios
-        .get("https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar", config)
+        .get("http://35.198.205.6:5000/api/v1/kamar/getAllKamar", config)
         .then((response) => {
           setKamarOptions(response.data.data);
         })
@@ -117,7 +117,7 @@ const NomorKamarUpdate = () => {
 
       try {
         const response = await axios.get(
-          `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getNomorKamarByID/${id}`,
+          `http://35.198.205.6:5000/api/v1/kamar/getNomorKamarByID/${id}`,
           config
         );
         const kamarData = response.data.data.kamar;

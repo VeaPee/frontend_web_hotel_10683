@@ -15,9 +15,6 @@ const Topbar = () => {
         backgroundColor={colors.primary[400]}
         borderRadius="3px"
       >
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <img alt="profile-user" src={`../../assets/GAH_Logo.jpg`} />
-        </Box>
       </Box>
 
       <Box display="flex">

@@ -34,7 +34,7 @@ const tarifCreate = () => {
 
     try {
       const response = await axios.post(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/tarif/addTarif",
+        "http://35.198.205.6:5000/api/v1/tarif/addTarif",
         {
           seasonId: values.seasonId,
           kamarId: values.kamarId,
@@ -77,7 +77,7 @@ const tarifCreate = () => {
           };
         // Fetch the season options from the backend API
         axios
-          .get("https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/season/getAllSeason", config)
+          .get("http://35.198.205.6:5000/api/v1/season/getAllSeason", config)
           .then((response) => {
             setSeasonOptions(response.data.data);
           })
@@ -102,7 +102,7 @@ const tarifCreate = () => {
           };
         // Fetch the kamar options from the backend API
         axios
-          .get("https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar", config)
+          .get("http://35.198.205.6:5000/api/v1/kamar/getAllKamar", config)
           .then((response) => {
             setKamarOptions(response.data.data);
           })

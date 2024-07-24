@@ -96,14 +96,14 @@ const Tarif = () => {
       };
 
       const response = await axios.get(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/tarif/getAllTarif",
+        "http://35.198.205.6:5000/api/v1/tarif/getAllTarif",
         config
       );
       console.log(response); // Check the response object and its structure
 
       // Fetch Data from Kamar
       const kamarResponse = await axios.get(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar",
+        "http://35.198.205.6:5000/api/v1/kamar/getAllKamar",
         config
       );
       console.log(kamarResponse); // Check the kamar response object and its structure
@@ -115,7 +115,7 @@ const Tarif = () => {
 
       // Fetch Data from Season
       const seasonResponse = await axios.get(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/season/getAllSeason",
+        "http://35.198.205.6:5000/api/v1/season/getAllSeason",
         config
       );
       console.log(seasonResponse); // Check the season response object and its structure
@@ -159,7 +159,7 @@ const Tarif = () => {
       };
 
       await axios.delete(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/tarif/deleteTarif/${id}`,
+        `http://35.198.205.6:5000/api/v1/tarif/deleteTarif/${id}`,
         config
       );
 

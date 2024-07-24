@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1721800133866" clover="3.2.0">
+  <project timestamp="1721800133866" name="All files">
+    <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0" elements="5" coveredelements="0" complexity="0" loc="4" ncloc="4" packages="1" files="1" classes="1"/>
+    <file name="Topbar.jsx" path="D:\Kuliah\KULIAH\Semester 8\Tugas Akhir\Backend Kafe\frontend_web_hotel_10683\src\scenes\global\Topbar.jsx">
+      <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <line num="7" count="0" type="stmt"/>
+      <line num="8" count="0" type="stmt"/>
+      <line num="9" count="0" type="stmt"/>
+      <line num="11" count="0" type="stmt"/>
+    </file>
+  </project>
+</coverage>

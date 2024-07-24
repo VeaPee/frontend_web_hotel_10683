@@ -48,7 +48,7 @@ const SeasonUpdate = () => {
   
     try {
       const response = await axios.put(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/season/updateSeason/${id}`,
+        `http://35.198.205.6:5000/api/v1/season/updateSeason/${id}`,
         {
           jenis_season: values.jenis_season,
           tanggal_awal: values.tanggal_awal,
@@ -93,7 +93,7 @@ const SeasonUpdate = () => {
 
     try {
       const response = await axios.get(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/season/getSeasonByID/${id}`,
+        `http://35.198.205.6:5000/api/v1/season/getSeasonByID/${id}`,
         config
       );
 

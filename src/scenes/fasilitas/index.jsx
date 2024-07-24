@@ -96,7 +96,7 @@ const Fasilitas = () => {
       };
 
       const response = await axios.get(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/fasilitas/getAllFasilitas",
+        "http://35.198.205.6:5000/api/v1/fasilitas/getAllFasilitas",
         config
       );
       console.log(response); // Check the response object and its structure
@@ -135,7 +135,7 @@ const Fasilitas = () => {
       };
 
       await axios.delete(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/fasilitas/deleteFasilitas/${id}`,
+        `http://35.198.205.6:5000/api/v1/fasilitas/deleteFasilitas/${id}`,
         config
       );
 

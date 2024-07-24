@@ -71,7 +71,7 @@ const PemesananKamarPageGrup = () => {
 
           for (const kamar of cart) {
             const responseKamar = await axios.post(
-              "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/transaksiKamar",
+              "http://35.198.205.6:5000/api/v1/transaksi/transaksiKamar",
               {
                 reservasiId: reservasiId,
                 kamarId: kamar.id,
@@ -103,7 +103,7 @@ const PemesananKamarPageGrup = () => {
 
     try {
       const response = await axios.post(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/transaksiReservasi",
+        "http://35.198.205.6:5000/api/v1/transaksi/transaksiReservasi",
         {
           customerId: customerId,
           check_in: tanggalAwal,

@@ -42,7 +42,7 @@ const tarifUpdate = () => {
 
     axios
       .put(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/tarif/updateTarif/${id}`,
+        `http://35.198.205.6:5000/api/v1/tarif/updateTarif/${id}`,
         {
             seasonId: values.seasonId,
             kamarId: values.kamarId,
@@ -74,7 +74,7 @@ const tarifUpdate = () => {
 
     try {
       const response = await axios.get(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/tarif/getTarifByID/${id}`,
+        `http://35.198.205.6:5000/api/v1/tarif/getTarifByID/${id}`,
         config
       );
 
@@ -107,7 +107,7 @@ useEffect(() => {
           };
         // Fetch the season options from the backend API
         axios
-          .get("https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/season/getAllSeason", config)
+          .get("http://35.198.205.6:5000/api/v1/season/getAllSeason", config)
           .then((response) => {
             setSeasonOptions(response.data.data);
           })
@@ -132,7 +132,7 @@ useEffect(() => {
           };
         // Fetch the kamar options from the backend API
         axios
-          .get("https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/kamar/getAllKamar", config)
+          .get("http://35.198.205.6:5000/api/v1/kamar/getAllKamar", config)
           .then((response) => {
             setKamarOptions(response.data.data);
           })

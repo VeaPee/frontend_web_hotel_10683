@@ -17,7 +17,7 @@ metadata:
   name: run-staging-frontend
 description: Cloud Run Staging service
 run:
-  location: projects/kafe-tabebuya/locations/asia-southeast2
+  location: projects/tugas-akhir-10683/locations/asia-southeast2
 ---
 
 apiVersion: deploy.cloud.google.com/v1
@@ -27,4 +27,4 @@ metadata:
 description: Cloud Run production service
 requireApproval: true
 run:
-  location: projects/kafe-tabebuya/locations/asia-southeast2
+  location: projects/tugas-akhir-10683/locations/asia-southeast2

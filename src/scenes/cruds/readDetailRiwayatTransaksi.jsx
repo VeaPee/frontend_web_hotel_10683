@@ -113,7 +113,7 @@ const DetailRiwayatTransaksi = () => {
       setIsLoading(true);
 
       const response = await axios.get(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getRiwayatTransaksi/${id}`,
+        `http://35.198.205.6:5000/api/v1/customer/getRiwayatTransaksi/${id}`,
         config
       );
 
@@ -203,7 +203,7 @@ const DetailRiwayatTransaksi = () => {
       let pegawaiNama = "";
       if (pegawaiThing) {
         const responsePegawai = await axios.get(
-          `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getPegawaiByID/${pegawaiThing}`,
+          `http://35.198.205.6:5000/api/v1/customer/getPegawaiByID/${pegawaiThing}`,
           config
         );
 
@@ -217,7 +217,7 @@ const DetailRiwayatTransaksi = () => {
 
       //   CUSTOMER
       const responseCustomer = await axios.get(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getCustomerByID/${customerThing}`,
+        `http://35.198.205.6:5000/api/v1/customer/getCustomerByID/${customerThing}`,
         config
       );
 

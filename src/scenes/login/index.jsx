@@ -44,7 +44,7 @@ const Login = () => {
   const handleFormSubmit = (values) => {
     axios
       .post(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/auth/login",
+        "http://35.198.205.6:5000/api/v1/auth/login",
         {
           username: values.username,
           password: values.password,
@@ -104,7 +104,7 @@ const Login = () => {
 
   return (
     <Box m="20px">
-      <Header title="Login" subtitle="Login to your Account" />
+      <Header title="Account" subtitle="Go to your Account" />
 
       <Snackbar
         open={snackbarOpen}
@@ -213,8 +213,8 @@ const Login = () => {
 };
 
 const checkoutSchema = yup.object().shape({
-  username: yup.string().required("required"),
-  password: yup.string().required("required"),
+  username: yup.string().required("required username"),
+  password: yup.string().required("required password"),
 });
 const initialValues = {
   username: "",

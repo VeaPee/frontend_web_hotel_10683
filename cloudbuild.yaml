@@ -1,24 +1,53 @@
 substitutions:
-  _REGION: asia-southeast2
+  _REGION: asia-southeast1
+  _VM_USER: vincentius_vap
+  _VM_NAME: aplikasi-testing-ci-cd
+  _ZONE: asia-southeast1-a
+  _IMAGE_NAME: app-frontend
+  _IMAGE_TAG: $COMMIT_SHA
+
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/app-frontend:$COMMIT_SHA', '.']
-  id: build and testing
+  id: build
+  entrypoint: 'sh'
+  args:
+    [
+      '-c',
+      'echo "Build started at $(date)" && docker build -t ${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/${_IMAGE_NAME}:${_IMAGE_TAG} . && echo "Build ended at $(date)"'
+    ]
 
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['run', '--rm', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/app-frontend:$COMMIT_SHA', npm', 'run', 'test']
   id: test
+  entrypoint: 'sh'
+  args:
+    [
+      '-c',
+      'echo "Test started at $(date)" && docker run ${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/${_IMAGE_NAME}:${_IMAGE_TAG} npm run test && echo "Test ended at $(date)"'
+    ]
 
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/app-frontend:$COMMIT_SHA']
   id: push
-  
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-  entrypoint: gcloud
-  args: 
-      [
-      "deploy", "releases", "create", "release-$SHORT_SHA",
-      "--delivery-pipeline", "pipeline-frontend",
-      "--region", "${_REGION}",
-      "--images", "app=${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/app-frontend:$COMMIT_SHA"
-      ]
+  entrypoint: 'sh'
+  args:
+    [
+      '-c',
+      'echo "Push started at $(date)" && docker push ${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/${_IMAGE_NAME}:${_IMAGE_TAG} && echo "Push ended at $(date)"'
+    ]
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: deploy
+  entrypoint: 'bash'
+  secretEnv: ['KEY', 'MYSQL', 'PORT']
+  args:
+    - '-c'
+    - |
+      set -e
+      echo "Deploy started at $(date)"
+      gcloud auth configure-docker
+      gcloud compute ssh ${_VM_USER}@${_VM_NAME} --zone=${_ZONE} --command "sh -c 'docker pull ${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/${_IMAGE_NAME}:${_IMAGE_TAG} && \
+              docker stop app-frontend || true && \
+              docker rm app-frontend || true && \
+              docker run -d --name app-frontend \
+              -p 3000:3000 \
+              ${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/${_IMAGE_NAME}:${_IMAGE_TAG}'"
+      echo "Deploy ended at $(date)"

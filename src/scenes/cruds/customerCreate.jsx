@@ -44,7 +44,7 @@ const CustomerCreate = () => {
 
     axios
       .post(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/addCustomer`,
+        `http://35.198.205.6:5000/api/v1/customer/addCustomer`,
         // `http://localhost:6000/api/v1/customer/addCustomer`,
         
         {

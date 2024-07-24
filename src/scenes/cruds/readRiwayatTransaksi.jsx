@@ -202,8 +202,8 @@ const RiwayatTransaksi = () => {
       };
 
       const response = await axios.get(
-        // "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getRiwayatTransaksi",
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getRiwayatTransaksi",
+        // "http://35.198.205.6:5000/api/v1/customer/getRiwayatTransaksi",
+        "http://35.198.205.6:5000/api/v1/customer/getRiwayatTransaksi",
         config
       );
 
@@ -232,7 +232,7 @@ const RiwayatTransaksi = () => {
     try {
       console.log("Request Payload:", {
         method: "PUT",
-        url: `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/pembatalanReservasi/${id}`,
+        url: `http://35.198.205.6:5000/api/v1/transaksi/pembatalanReservasi/${id}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -246,7 +246,7 @@ const RiwayatTransaksi = () => {
       console.log("config:", config);
 
       const response = await axios.put(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/transaksi/pembatalanReservasi/${id}`,
+        `http://35.198.205.6:5000/api/v1/transaksi/pembatalanReservasi/${id}`,
         {
           status: "Dibatalkan",
         },

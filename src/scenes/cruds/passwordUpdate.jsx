@@ -34,7 +34,7 @@ const PasswordUpdate = () => {
       };
 
       const result = await axios.put(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/akun/edit-password",
+        "http://35.198.205.6:5000/api/v1/akun/edit-password",
         {
           oldPassword: values.oldPassword,
           newPassword: values.newPassword,

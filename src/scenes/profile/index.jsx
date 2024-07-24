@@ -25,7 +25,7 @@ const Profile = () => {
       };
 
       const response = await axios.get(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/akun/profile",
+        "http://35.198.205.6:5000/api/v1/akun/profile",
         config
       );
 
@@ -83,7 +83,7 @@ const Profile = () => {
       };
 
       const responseCustomer = await axios.get(
-        "https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getCustomer",
+        "http://35.198.205.6:5000/api/v1/customer/getCustomer",
         config
       );
       console.log(responseCustomer); // Check the response object and its structure

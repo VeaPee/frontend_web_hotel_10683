@@ -58,7 +58,7 @@ const CustomerUpdate = () => {
 
     axios
       .put(
-        `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/updateCustomer/${id}`,
+        `http://35.198.205.6:5000/api/v1/customer/updateCustomer/${id}`,
         {
           nama_customer: values.nama_customer,
           nama_institusi: values.nama_institusi,
@@ -113,7 +113,7 @@ const CustomerUpdate = () => {
 
       try {
         const response = await axios.get(
-          `https://backend-dot-p3l-10683.et.r.appspot.com/api/v1/customer/getCustomerByID/${id}`,
+          `http://35.198.205.6:5000/api/v1/customer/getCustomerByID/${id}`,
           config
         );
 
