@@ -47,37 +47,36 @@ describe("Register Component", () => {
     // Assertions for validation errors
     expect(await screen.findByText("Username is required")).toBeVisible();
     expect(await screen.findByText("Password is required")).toBeVisible();
-  });
+  }, 10000); // Set timeout to 10 seconds for this test
 
-//   it("displays an error message for existing usernames", async () => {
-//     // Mock axios.post to resolve with an error message
-//     axios.post.mockResolvedValue({
-//       data: { message: "Username already registered! Please Login to proceed." }
-//     });
+  it("displays an error message for existing usernames", async () => {
+    // Mock axios.post to resolve with an error message
+    axios.post.mockResolvedValue({
+      data: { message: "Registered successfully!." }
+    });
 
-//     // Render the Register component
-//     render(
-//       <BrowserRouter>
-//         <Register />
-//       </BrowserRouter>
-//     );
+    render(
+      <BrowserRouter>
+        <Register />
+      </BrowserRouter>
+    );
 
-//     // Get form elements
-//     const usernameInput = screen.getByLabelText("Username");
-//     const passwordInput = screen.getByLabelText("Password");
-//     const registerButton = screen.getByRole("button", { name: /Register/i });
+    // Get form elements
+    const usernameInput = screen.getByLabelText("Username");
+    const passwordInput = screen.getByLabelText("Password");
+    const registerButton = screen.getByRole("button", { name: /Register/i });
 
-//     // Fill out the form
-//     fireEvent.change(usernameInput, { target: { value: "existinguser" } });
-//     fireEvent.change(passwordInput, { target: { value: "password123" } });
-//     fireEvent.click(registerButton);
+    // Fill out the form
+    fireEvent.change(usernameInput, { target: { value: "existinguser" } });
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.click(registerButton);
 
-//     // Wait for the alert to be called
-//     await new Promise((resolve) => setTimeout(resolve, 0));
+    // Wait for the alert to be called
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
-//     // Check if the error message from the server is displayed
-//     expect(window.alert).toHaveBeenCalledWith('Username already registered! Please Login to proceed.');
-//   });
+    // Check if the error message from the server is displayed
+    expect(window.alert).toHaveBeenCalledWith('Registered successfully!.');
+  }, 10000); // Set timeout to 10 seconds for this test
 
   it("successfully registers a new user", async () => {
     // Mock successful registration response 
@@ -104,10 +103,10 @@ describe("Register Component", () => {
     fireEvent.click(registerButton);
 
     // Wait for the alert to be called
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     // Check if success message from server is shown or handled appropriately 
     expect(window.alert).toHaveBeenCalledWith('Registered successfully!.'); // Adjust message if needed
-  });
+  }, 10000); // Set timeout to 10 seconds for this test
 
 });

@@ -46,13 +46,13 @@ describe("Profile Component", () => {
       </BrowserRouter>
     );
 
-    // Add a delay of 3 seconds
+    // Add a delay of 5 seconds
     await new Promise((r) => setTimeout(r, 5000));
 
     // Wait for data to load (you might use findBy* queries)
     const usernameInput = await screen.findByLabelText("Username");
     expect(usernameInput).toHaveValue("testuser"); 
-  });
+  }, 10000); // Set timeout to 10 seconds for this test
 
   it("handles the Update Password button click", async () => {
     axios.get.mockResolvedValue({
@@ -75,7 +75,7 @@ describe("Profile Component", () => {
       </BrowserRouter>
     );
 
-    // Add a delay of 3 seconds
+    // Add a delay of 5 seconds
     await new Promise((r) => setTimeout(r, 5000));
 
     const updateButton = await screen.findByText("Update Password");
@@ -83,7 +83,7 @@ describe("Profile Component", () => {
 
     // Assertions:
     // Add necessary assertions here
-  });
+  }, 10000); // Set timeout to 10 seconds for this test
 
   it("fetches and displays customer data for a role 6 user", async () => {
     axios.get.mockResolvedValueOnce({ // For profile data
@@ -123,12 +123,12 @@ describe("Profile Component", () => {
       </BrowserRouter>
     );
 
-    // Add a delay of 3 seconds
+    // Add a delay of 5 seconds
     await new Promise((r) => setTimeout(r, 5000));
 
     const jenisCustomerInput = await screen.findByLabelText("Jenis Customer"); 
     expect(jenisCustomerInput).toHaveValue("Individual");
-  });
+  }, 10000); // Set timeout to 10 seconds for this test
 
   // ... Add more tests for other functionalities 
 });

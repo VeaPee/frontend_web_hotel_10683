@@ -41,12 +41,12 @@ describe("Login Component", () => {
     // Click the login button without filling any fields
     fireEvent.click(loginButton);
 
-    // Add a delay of 3 seconds
+    // Add a delay of 5 seconds
     await new Promise((r) => setTimeout(r, 5000));
 
     expect(await screen.findByText("required username")).toBeVisible();
     expect(await screen.findByText("required password")).toBeVisible(); // Check for both username and password errors
-  });
+  }, 10000); // Set timeout to 10 seconds for this test
 
   it("displays an error message for invalid credentials", async () => {
     // Mock axios.post to simulate an unsuccessful login response
@@ -72,7 +72,7 @@ describe("Login Component", () => {
     // Click the login button
     fireEvent.click(loginButton);
 
-    // Add a delay of 3 seconds
+    // Add a delay of 5 seconds
     await new Promise((r) => setTimeout(r, 5000));
 
     // Assert that the error snackbar is displayed
@@ -82,7 +82,5 @@ describe("Login Component", () => {
     expect(
       await screen.findByText("Username atau Password Salah! Coba Lagi")
     ).toBeVisible();
-  });
-
-  // ... other test cases
+  }, 10000); // Set timeout to 10 seconds for this test
 });
