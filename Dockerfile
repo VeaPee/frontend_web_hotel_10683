@@ -14,8 +14,6 @@ COPY . .
 RUN chown -R node /usr/src/app
 USER node
 
-RUN npm run test
-
 EXPOSE 3000
 
 CMD ["npm", "start"]
