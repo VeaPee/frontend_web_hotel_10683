@@ -40,7 +40,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "vitest",
+    "test": "vitest --no-watch",
     "eject": "react-scripts eject",
     "test:react-scripts": "react-scripts test"
   },
