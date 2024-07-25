@@ -57,7 +57,7 @@ const Dashboard = () => {
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="Dashboard CI/CD 25/07/2024 14:18" subtitle="Welcome to Grand Atma Hotel" />
+        <Header title="Dashboard CI/CD 25/07/2024 14:40" subtitle="Welcome to Grand Atma Hotel" />
       </Box>
 
       {/* HOTEL ROOMS */}
