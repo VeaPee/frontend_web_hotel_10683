@@ -56,3 +56,6 @@ steps:
               -p 3000:3000 \
               ${_REGION}-docker.pkg.dev/${PROJECT_ID}/containers-repo/${_IMAGE_NAME}:${_IMAGE_TAG}'"
       echo "Deploy ended at $(date)"
+
+options:
+  machineType: 'E2_HIGHCPU_8'  
