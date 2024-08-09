@@ -182,7 +182,7 @@ const CheckIn = () => {
 
   return (
     <Box m="20px">
-      <Header title="Check In" subtitle="Mengonfirmasi Check In Customer" />
+      <Header title="Check In Paralel" subtitle="Mengonfirmasi Check In Customer" />
 
       {/* Button to toggle DetailRiwayatTransaksi */}
       <Button onClick={handleToggleDetail}>
