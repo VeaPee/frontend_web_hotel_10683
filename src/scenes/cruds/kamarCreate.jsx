@@ -88,7 +88,7 @@ const KamarCreate = () => {
 
   return (
     <Box m="20px">
-      <Header title="Create Kamar" subtitle="Create a new Kamar" />
+      <Header title="Create Kamar Paralel" subtitle="Create a new Kamar" />
 
       <Snackbar
         open={snackbarOpen}
