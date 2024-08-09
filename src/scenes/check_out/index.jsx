@@ -233,7 +233,7 @@ const CheckOut = () => {
   return (
     <Box m="20px">
 
-      <Header title="Check Out" subtitle="Mengonfirmasi Check Out Customer" />
+      <Header title="Check Out Paralel" subtitle="Mengonfirmasi Check Out Customer" />
 
       {/* Button to toggle DetailRiwayatTransaksi */}
       <Button onClick={handleToggleDetail}>
