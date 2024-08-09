@@ -172,7 +172,7 @@ const PemesananFasilitasPage = () => {
         </Alert>
       </Snackbar>
 
-      <Header title="Tambah Fasilitas" />
+      <Header title="Tambah Fasilitas (Paralel)" />
 
       <Formik
         onSubmit={(values) => handleFormSubmit(values, token)}
